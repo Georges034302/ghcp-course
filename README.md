@@ -4,7 +4,7 @@ GitHub Copilot for Java & .NET Web Developers – GHCP Training Series. This cou
 ---
 
 <details>
-<summary><strong>Session 1 – Demo</strong> (click to expand/hide)</summary>
+<summary><strong>Session 1 – Lab</strong> (click to expand/hide)</summary>
 
 ### 🧪 Hands-On Lab: Build & Test a RESTful API in .NET with Copilot-Aided Unit Testing
 
@@ -46,7 +46,43 @@ A developer is building a backend ProductService for an e-commerce platform. The
 </details>
 
 <details>
-<summary><strong>Session 2 – Demo</strong> (click to expand/hide)</summary>
+<summary><strong>Session 1 – Demo</strong> (click to expand/hide)</summary>
+
+### 🚀 Instructor Demo: PlayerApp – Spring Boot API with Copilot + GitHub Actions
+
+#### 🏷️ Demo Title
+Build, Test, and Deploy a Java Spring Boot API Using GitHub Copilot and Azure App Service
+
+#### 🎯 Demo Objective
+Use GitHub Copilot to build a Java-based Player API (Player ID, name, random score), generate unit tests with Java Faker, create CI/CD pipelines via Copilot prompts, and deploy to Azure App Service.
+
+#### ✅ Demo Scenario
+The instructor demonstrates how Copilot can serve as a real-time assistant to write Java code, generate test coverage, and scaffold deployment workflows.
+
+### 🔧 Demo Steps Overview
+
+| Phase        | Description                                                           |
+|--------------|-----------------------------------------------------------------------|
+| Project Init | Use Spring Initializr to scaffold a Maven-based Spring Boot project  |
+| API Logic    | Create Player model, service, and controller using Copilot prompts   |
+| Unit Tests   | Use Copilot to generate JUnit tests + Java Faker for test data       |
+| CI Pipeline  | Copilot-generated GitHub Actions YAML for build/test with Maven      |
+| CD Pipeline  | Copilot-generated GitHub Actions YAML for deploying to Azure         |
+| Deployment   | Deploy to Azure App Service using GitHub Secrets + publish profile   |
+| Validation   | Call endpoints via browser/Postman to validate full flow             |
+
+| Expected Outcome | Description                                                    |
+|------------------|------------------------------------------------------------------|
+| 1                | Fully working Player API deployed to Azure                      |
+| 2                | API returns mock data with scores between 0–10                 |
+| 3                | Tests are Copilot-generated and pass locally + in GitHub CI     |
+| 4                | CI/CD workflows are Copilot-assisted and reusable               |
+| 5                | Demonstrates real-time Copilot productivity in Java development |
+
+</details>
+
+<details>
+<summary><strong>Session 2 – Lab</strong> (click to expand/hide)</summary>
 
 ### 🧪 Hands-On Lab: Secure and Document an Application Using Copilot and GitHub Security Tools
 
@@ -80,6 +116,41 @@ A developer inherits a legacy app with outdated code. They want to secure input 
 | 5                | GitHub Copilot Chat demonstrates real-time aid |
 
 </details>
+
+<details>
+<summary><strong>Session 2 – Demo</strong> (click to expand/hide)</summary>
+
+### 🚀 Instructor Demo: Refactor and Harden a Legacy API Using Copilot + CodeQL
+
+#### 🏷️ Demo Title
+Fix Unsafe Code and Auto-Document a Java/.NET App Using GitHub Copilot and Advanced Security
+
+#### 🎯 Demo Objective
+Live refactor of an insecure endpoint with Copilot suggestions and CodeQL scanning. Enhance it with validation, documentation, and GitHub Actions enforcement.
+
+#### ✅ Demo Scenario
+An existing endpoint has hardcoded secrets, missing validation, and lacks documentation. The instructor walks through correcting it interactively using GitHub tools.
+
+### 🔧 Demo Steps Overview
+
+| Phase         | Description                                                     |
+|---------------|-----------------------------------------------------------------|
+| Code Review   | Use Copilot to analyze and rewrite vulnerable method            |
+| Security Scan | Run CodeQL via GitHub Actions                                  |
+| Validation    | Add input checks, null checks, and logging                     |
+| Documentation | Use Copilot Chat to generate XML or Javadoc                    |
+| CI Enforcement| Require test + doc checks using GitHub Actions                 |
+
+| Expected Outcome | Description                                          |
+|------------------|------------------------------------------------------|
+| 1                | Legacy code is refactored securely with Copilot      |
+| 2                | CodeQL confirms no high/medium-severity vulnerabilities |
+| 3                | Copilot Chat generates accurate, readable documentation |
+| 4                | PRs blocked without passing tests + docs             |
+| 5                | Secure coding and documentation workflows are reinforced |
+
+</details>
+
 
 ---
 #### 🧑‍🏫 Author: Georges Bou Ghantous
