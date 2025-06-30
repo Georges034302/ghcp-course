@@ -80,3 +80,7 @@ A developer inherits a legacy app with outdated code. They want to secure input 
 | 5                | GitHub Copilot Chat demonstrates real-time aid |
 
 </details>
+
+---
+#### 🧑‍🏫 Author: Georges Bou Ghantous
+<sub><i>This repository delivers GitHub Copilot training for Java & .NET developers, showcasing real-world workflows for test automation, secure coding, documentation, and CI/CD using VS Code and GitHub Actions.</i></sub>
