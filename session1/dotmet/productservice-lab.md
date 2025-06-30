@@ -245,5 +245,3 @@ dotnet test
 ✔ Used Bogus to create edge-case test data  
 ✔ Validated results via browser and `dotnet test`
 
-### 👨‍💻 Author: Georges Bou Ghantous
-This repository delivers GitHub Copilot training for Java & .NET developers, showcasing real-world workflows for test automation, secure coding, documentation, and CI/CD using VS Code and GitHub Actions.
