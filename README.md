@@ -84,72 +84,18 @@ The instructor demonstrates how Copilot can serve as a real-time assistant to wr
 <details>
 <summary><strong>Session 2 – Lab</strong> (click to expand/hide)</summary>
 
-### 🧪 Hands-On Lab: Secure and Document an Application Using Copilot and GitHub Security Tools
-
-#### 🏷️ Lab Title
-Secure a Spring Boot or .NET App with Copilot + CodeQL and Auto-Generated Documentation
-
-#### 🎯 Lab Objective
-Auto-detect insecure code patterns using GitHub Advanced Security and Copilot suggestions. Refactor risky code, enforce validation logic, and generate Javadoc/XML comments and Markdown documentation using GitHub Copilot Chat and GitHub Actions workflows.
-
-#### ✅ Lab Scenario
-A developer inherits a legacy app with outdated code. They want to secure input validation, remove hardcoded secrets, and create clean, maintainable API documentation and workflows using GitHub tools.
-
-### 🔧 Lab Steps Overview
-
-| Setup Step | Description                                      |
-|------------|--------------------------------------------------|
-| 1          | Enable GitHub Advanced Security (CodeQL, Dependabot) |
-| 2          | Scan app using CodeQL and secret scanning        |
-| 3          | Prompt Copilot to refactor risky input handling  |
-| 4          | Add missing validation and output encoding       |
-| 5          | Use Copilot Chat to generate XML/Javadoc         |
-| 6          | Generate README.md and CONTRIBUTING.md           |
-| 7          | Validate documentation sync with GitHub Actions  |
-
-| Expected Outcome | Description                                  |
-|------------------|----------------------------------------------|
-| 1                | Unsafe code is identified and refactored     |
-| 2                | Secure defaults and validation added         |
-| 3                | XML/Javadoc and Markdown docs are generated  |
-| 4                | CI ensures docs and code stay in sync        |
-| 5                | GitHub Copilot Chat demonstrates real-time aid |
+_🚧 This section is under construction. Lab instructions will be added soon._
 
 </details>
+
 
 <details>
-<summary><strong>Session 2 – Demo</strong> (click to expand/hide)</summary>
+<summary><strong>Session 2 –Demo</strong> (click to expand/hide)</summary>
 
-### 🚀 Instructor Demo: Refactor and Harden a Legacy API Using Copilot + CodeQL
-
-#### 🏷️ Demo Title
-Fix Unsafe Code and Auto-Document a Java/.NET App Using GitHub Copilot and Advanced Security
-
-#### 🎯 Demo Objective
-Live refactor of an insecure endpoint with Copilot suggestions and CodeQL scanning. Enhance it with validation, documentation, and GitHub Actions enforcement.
-
-#### ✅ Demo Scenario
-An existing endpoint has hardcoded secrets, missing validation, and lacks documentation. The instructor walks through correcting it interactively using GitHub tools.
-
-### 🔧 Demo Steps Overview
-
-| Phase         | Description                                                     |
-|---------------|-----------------------------------------------------------------|
-| Code Review   | Use Copilot to analyze and rewrite vulnerable method            |
-| Security Scan | Run CodeQL via GitHub Actions                                  |
-| Validation    | Add input checks, null checks, and logging                     |
-| Documentation | Use Copilot Chat to generate XML or Javadoc                    |
-| CI Enforcement| Require test + doc checks using GitHub Actions                 |
-
-| Expected Outcome | Description                                          |
-|------------------|------------------------------------------------------|
-| 1                | Legacy code is refactored securely with Copilot      |
-| 2                | CodeQL confirms no high/medium-severity vulnerabilities |
-| 3                | Copilot Chat generates accurate, readable documentation |
-| 4                | PRs blocked without passing tests + docs             |
-| 5                | Secure coding and documentation workflows are reinforced |
+_🚧 This section is under construction. Demo instructions will be added soon._
 
 </details>
+
 
 
 ---
