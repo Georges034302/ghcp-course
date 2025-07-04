@@ -21,10 +21,13 @@
 cd /workspaces/ghcp-course/session1/java && curl https://start.spring.io/starter.zip \
   -d dependencies=web \
   -d name=PlayerApp \
+  -d artifactId=PlayerApp \
   -d type=maven-project \
   -d language=java \
   -d javaVersion=21 \
   -o PlayerApp.zip
+unzip PlayerApp.zip
+cd PlayerApp
 ```
 
 Run the app:
