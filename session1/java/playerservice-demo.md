@@ -63,12 +63,17 @@ src/main/java/com/example/PlayerApp/
 ## ✅ Step 3: Develop Model, Repository, and Service (with Copilot)
 
 ### 📄 Player.java (Model)
+> *// Create a Player class in PlayerApp/model with:  
+> // - id: String (3-digit, "000"–"999")  
+> // - name: String ("Player-<random 0-100>")  
+> // - score: int (random 0–100)  
+> // Include constructor, getters, and setters.*
+
 ```java
-// create a Player class with (id, name, and score) in PlayerApp/model
 public class Player {
-    private String id; // 3-digit string between "000" and "999"
-    private String name; // "Player-<random 0-100>"
-    private int score; // random 0-100
+    private String id; 
+    private String name; 
+    private int score; 
     // constructor, getters, setters
 }
 ```
