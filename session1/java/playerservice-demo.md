@@ -18,7 +18,9 @@
 
 ### ⛏️ Option A: Use Spring Initializr
 ```bash
-cd /workspaces/ghcp-course/session1/java && curl https://start.spring.io/starter.zip \
+cd /workspaces/ghcp-course/session1/java
+mkdir PlayerApp
+cd PlayerApp && curl https://start.spring.io/starter.zip \
   -d dependencies=web \
   -d name=PlayerApp \
   -d artifactId=PlayerApp \
@@ -26,8 +28,6 @@ cd /workspaces/ghcp-course/session1/java && curl https://start.spring.io/starter
   -d language=java \
   -d javaVersion=21 \
   -o PlayerApp.zip
-unzip PlayerApp.zip
-cd PlayerApp
 ```
 
 Run the app:
