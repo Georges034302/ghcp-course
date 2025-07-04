@@ -39,9 +39,8 @@ Run the app:
 ---
 ## Step 2: Project Structure with Copilot
 
-```
 > *Prompt: Create this Spring Boot structure under `com.example.PlayerApp`:*
-
+```
 src/main/java/com/example/PlayerApp/
 │
 ├── model/
