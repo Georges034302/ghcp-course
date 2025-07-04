@@ -16,8 +16,10 @@ import java.util.Arrays;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@WebMvcTest
+@WebMvcTest(controllers = com.example.PlayerApp.controller.PlayerController.class)
 class PlayerControllerTest {
 
     @Autowired
@@ -66,6 +68,17 @@ class PlayerControllerTest {
         player.setName(name);
         player.setScore(score);
 
+        assertNotNull(player.getName());
+        assertTrue(player.getScore() >= 0 && player.getScore() <= 100);
+    }
+
+    @Test
+    void customModelConstructorWithFaker() {
+        String id = String.format("%03d", faker.number().numberBetween(0, 1000));
+        String name = "Player-" + faker.number().numberBetween(0, 101);
+        int score = faker.number().numberBetween(0, 101);
+        Player player = new Player(id, name, score);
+        assertNotNull(player.getId());
         assertNotNull(player.getName());
         assertTrue(player.getScore() >= 0 && player.getScore() <= 100);
     }

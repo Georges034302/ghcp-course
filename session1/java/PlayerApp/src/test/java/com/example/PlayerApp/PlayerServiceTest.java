@@ -3,15 +3,15 @@ package com.example.PlayerApp;
 import com.example.PlayerApp.model.Player;
 import com.example.PlayerApp.repository.PlayerRepository;
 import com.example.PlayerApp.service.PlayerService;
+import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.github.javafaker.Faker;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerServiceTest {
 
@@ -28,26 +28,26 @@ class PlayerServiceTest {
 
     @Test
     void getAllReturnsNonEmptyList() {
-        List<Player> players = new ArrayList<>();
-        players.add(new Player());
-        when(repository.getAll()).thenReturn(players);
-
-        assertFalse(service.getAll().isEmpty());
+        when(repository.getAll()).thenReturn(Arrays.asList(new Player(), new Player()));
+        List<Player> players = service.getAll();
+        assertNotNull(players);
+        assertTrue(players.size() > 0);
     }
 
     @Test
     void getPlayerReturnsCorrectPlayer() {
         Player player = new Player();
         when(repository.getById(player.getId())).thenReturn(player);
-
-        assertEquals(player, service.getById(player.getId()));
+        Player found = service.getById(player.getId());
+        assertNotNull(found);
+        assertEquals(player.getId(), found.getId());
     }
 
     @Test
     void getPlayerReturnsNullForUnknownId() {
         when(repository.getById("999")).thenReturn(null);
-
-        assertNull(service.getById("999"));
+        Player found = service.getById("999");
+        assertNull(found);
     }
 
     @Test
@@ -58,6 +58,17 @@ class PlayerServiceTest {
         player.setName(name);
         player.setScore(score);
 
+        assertNotNull(player.getName());
+        assertTrue(player.getScore() >= 0 && player.getScore() <= 100);
+    }
+
+    @Test
+    void customModelConstructorWithFaker() {
+        String id = String.format("%03d", faker.number().numberBetween(0, 1000));
+        String name = "Player-" + faker.number().numberBetween(0, 101);
+        int score = faker.number().numberBetween(0, 101);
+        Player player = new Player(id, name, score);
+        assertNotNull(player.getId());
         assertNotNull(player.getName());
         assertTrue(player.getScore() >= 0 && player.getScore() <= 100);
     }

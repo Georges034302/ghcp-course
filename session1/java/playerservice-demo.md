@@ -220,15 +220,15 @@ Visit:
 > PlayerControllerTest.java
 > PlayerServiceTest.java: test PlayerService methods (e.g., getAll, getById), using custom Player objects.  
 > PlayerControllerTest.java: test PlayerController endpoints (GET /players, GET /player/{id}) using MockMvc.  
-> For both classes, include tests for:  
+> Include tests for both Player constructors (custom and no-argument)
 > getAll returns non-empty list  
 > getPlayer returns correct player  
 > getPlayer returns null for unknown ID  
-> add player with Faker name and score.*
+> add player with Faker name and score.*  
 
 #### ✅ Outcome Classes:
 ```java
-@WebMvcTest
+@WebMvcTest(controllers = com.example.PlayerApp.controller.PlayerController.class)
 class PlayerControllerTest {
 
  ...
@@ -244,6 +244,9 @@ class PlayerControllerTest {
 
     @Test
     void addPlayerWithFakerNameAndScore() { ... }
+
+    @Test
+    void customModelConstructorWithFaker() { ... }
 
 }
 ```
@@ -268,6 +271,10 @@ class PlayerServiceTest {
 
     @Test
     void addPlayerWithFakerNameAndScore() { ... }
+
+    @Test
+    void customModelConstructorWithFaker() { ... }
+
 }
 ```
 

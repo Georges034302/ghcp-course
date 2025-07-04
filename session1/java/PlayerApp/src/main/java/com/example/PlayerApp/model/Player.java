@@ -11,6 +11,12 @@ public class Player {
         this.score = (int) (Math.random() * 101);
     }
 
+    public Player(String id, String name, int score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+
     public String getId() {
         return id;
     }
