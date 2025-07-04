@@ -28,24 +28,48 @@ cd PlayerApp && curl https://start.spring.io/starter.zip \
   -d language=java \
   -d javaVersion=21 \
   -o PlayerApp.zip
+unzip PlayerApp.zip
+rm PlayerApp.zip 
 ```
 
 Run the app:
 ```bash
 ./mvnw spring-boot:run
 ```
+---
+## Step 2: Project Structure with Copilot
+
+```
+> *Prompt: Create this Spring Boot structure under `com.example.PlayerApp`:*
+
+src/main/java/com/example/PlayerApp/
+│
+├── model/
+│   └── Player.java
+│
+├── repository/
+│   └── PlayerRepository.java
+│
+├── service/
+│   └── PlayerService.java
+│
+├── controller/
+│   └── PlayerController.java
+│
+└── PlayerAppApplication.java
+```
 
 ---
 
-## ✅ Step 2: Develop Model, Repository, and Service (with Copilot)
+## ✅ Step 3: Develop Model, Repository, and Service (with Copilot)
 
 ### 📄 Player.java (Model)
 ```java
-// create a Player class with id, name, and score between 0 and 10
+// create a Player class with (id, name, and score) in PlayerApp/model
 public class Player {
-    private int id;
-    private String name;
-    private int score;
+    private String id; // 3-digit string between "000" and "999"
+    private String name; // "Player-<random 0-100>"
+    private int score; // random 0-100
     // constructor, getters, setters
 }
 ```
@@ -93,7 +117,7 @@ public class PlayerController {
 
 ---
 
-## ✅ Step 3: Test API Locally
+## ✅ Step 4: Test API Locally
 ```bash
 ./mvnw spring-boot:run
 ```
@@ -103,7 +127,7 @@ Visit:
 
 ---
 
-## ✅ Step 4: Create Unit Tests (with Copilot + Faker)
+## ✅ Step 5: Create Unit Tests (with Copilot + Faker)
 
 ### Add Faker to pom.xml
 ```xml
@@ -131,14 +155,14 @@ int score = faker.number().numberBetween(0, 10);
 
 ---
 
-## ✅ Step 5: Run Unit Tests Locally
+## ✅ Step 6: Run Unit Tests Locally
 ```bash
 ./mvnw test
 ```
 
 ---
 
-## ✅ Step 6: Generate ci.yml (with Copilot)
+## ✅ Step 7: Generate ci.yml (with Copilot)
 
 ### .github/workflows/ci.yml
 ```yaml
@@ -167,7 +191,7 @@ jobs:
 
 ---
 
-## ✅ Step 7: Generate cd.yml for Azure Deployment
+## ✅ Step 8: Generate cd.yml for Azure Deployment
 
 ### .github/workflows/cd.yml
 ```yaml
@@ -199,7 +223,7 @@ jobs:
 
 ---
 
-## ✅ Step 8: Test Deployed API
+## ✅ Step 9: Test Deployed API
 
 Visit:
 - https://<YOUR-APP>.azurewebsites.net/api/players
