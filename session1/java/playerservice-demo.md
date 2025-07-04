@@ -63,11 +63,12 @@ src/main/java/com/example/PlayerApp/
 ## ✅ Step 3: Develop Model, Repository, and Service (with Copilot)
 
 ### 📄 Player.java (Model)
-> Create a Player class in PlayerApp/model with:  
+> *Prompt:
+>  Create a Player class in PlayerApp/model with:  
 >  id: String (3-digit, "000"–"999")  
 >  name: String ("Player-<random 0-100>")  
 >  score: int (random 0–100)  
->  Include constructor, getters, and setters.*
+>  Include constructor (no parameters), getters, and setters.*
 
 ```java
 public class Player {
@@ -81,10 +82,15 @@ public class Player {
 ---
 
 ### 📄 PlayerRepository.java
+> *Prompt:  
+> Create a repository interface for Player in PlayerApp/repository with:  
+> getById(String id): returns a Player  
+> getAll(): returns a List<Player>  
+> Use Player from the model package.*
+
 ```java
-// create a repository interface for Player with getById and getAll methods
 public interface PlayerRepository {
-    Player getById(int id);
+    Player getById(String id);
     List<Player> getAll();
 }
 ```
@@ -94,8 +100,13 @@ Then implement it with mock data.
 ---
 
 ### 📄 PlayerService.java
+> *Prompt:  
+> Create a PlayerService class in PlayerApp/service that uses PlayerRepository.  
+> Add methods to get a Player by id and to get all players.  
+> Implement logic to call the repository methods.  
+> Use Player and PlayerRepository from their respective packages.*
+
 ```java
-// create a service that uses PlayerRepository
 public class PlayerService {
     ...
 }
@@ -104,6 +115,13 @@ public class PlayerService {
 ---
 
 ### 📄 PlayerController.java
+> *Prompt:  
+> Create a PlayerController class in PlayerApp/controller.  
+> Annotate with @RestController and map to "/api".  
+> Inject PlayerService via constructor.  
+> Add endpoint GET /player/{id} → returns a Player as ResponseEntity, or 404 if not found.  
+> Add endpoint GET /players → returns all players as a list.*
+
 ```java
 @RestController
 @RequestMapping("/api")
@@ -112,11 +130,39 @@ public class PlayerController {
     private final PlayerService service;
 
     @GetMapping("/player/{id}")
-    public ResponseEntity<Player> getPlayer(@PathVariable int id) { ... }
+    public ResponseEntity<Player> getPlayer(@PathVariable String id) { ... }
 
     @GetMapping("/players")
     public List<Player> getAllPlayers() { ... }
 }
+```
+
+---
+
+### 📄 MockPlayerRepository
+> *Prompt:  
+> Implement the MockPlayerRepository class in PlayerApp/repository.  
+> Annotate with @Repository.  
+> Use a private final List<Player> called players.  
+> In the constructor, add 5 new Player() objects to the list using a loop.  
+> Implement getById(String id): return the Player with the matching id, or null if not found.  
+> Implement getAll(): return the list of players.*
+
+
+```bash
+@Repository
+public class MockPlayerRepository implements PlayerRepository {
+    private final List<Player> players = new ArrayList<>();
+
+    public MockPlayerRepository() { ... }
+
+    @Override
+    public Player getById(String id) { ... }
+
+    @Override
+    public List<Player> getAll() { ... }
+}
+
 ```
 
 ---

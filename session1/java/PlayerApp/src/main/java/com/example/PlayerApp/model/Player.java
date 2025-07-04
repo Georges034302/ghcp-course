@@ -5,7 +5,7 @@ public class Player {
     private String name;
     private int score;
 
-    public Player(int id, String name, int score) {
+    public Player() {
         this.id = String.format("%03d", (int) (Math.random() * 1000));
         this.name = "Player-" + (int) (Math.random() * 101);
         this.score = (int) (Math.random() * 101);
