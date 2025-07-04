@@ -7,7 +7,7 @@
 | App      | Spring Boot REST API (`PlayerApp`) |
 | Data     | `Player` class with mock data (ID, name, score 0–10) |
 | API      | `GET /api/player/{id}`, `GET /api/players` |
-| Test     | JUnit 5 tests with **Faker** |
+| Test     | JUnit 5 tests with **Faker**  + **MockMVC**|
 | CI       | GitHub Actions for **build + test** |
 | CD       | GitHub Actions to **deploy to Azure App Service** |
 | Tools    | VS Code or IntelliJ with GitHub Copilot |
@@ -68,8 +68,11 @@ src/main/java/com/example/PlayerApp/
 >  id: String (3-digit, "000"–"999")  
 >  name: String ("Player-<random 0-100>")  
 >  score: int (random 0–100)  
->  Include constructor (no parameters), getters, and setters.*
+>  Include a no-argument constructor that generates random values for all fields\
+>  Include a parameterized constructor for setting all fields manually\
+>  getters and setters for all fields.*
 
+#### ✅ Outcome Classes:
 ```java
 public class Player {
     private String id; 
@@ -88,6 +91,7 @@ public class Player {
 > getAll(): returns a List<Player>  
 > Use Player from the model package.*
 
+#### ✅ Outcome Classes:
 ```java
 public interface PlayerRepository {
     Player getById(String id);
@@ -106,6 +110,7 @@ Then implement it with mock data.
 > Implement logic to call the repository methods.  
 > Use Player and PlayerRepository from their respective packages.*
 
+#### ✅ Outcome Classes:
 ```java
 public class PlayerService {
     ...
@@ -122,6 +127,7 @@ public class PlayerService {
 > Add endpoint GET /player/{id} → returns a Player as ResponseEntity, or 404 if not found.  
 > Add endpoint GET /players → returns all players as a list.*
 
+#### ✅ Outcome Classes:
 ```java
 @RestController
 @RequestMapping("/api")
@@ -149,9 +155,8 @@ public class PlayerController {
 > Implement getById(String id): return the Player with the matching id, or null if not found.  
 > Implement getAll(): return the list of players.*
 
-
-
-```bash
+#### ✅ Outcome Classes:
+```java
 @Repository
 public class MockPlayerRepository implements PlayerRepository {
     private final List<Player> players = new ArrayList<>();
@@ -174,47 +179,108 @@ public class MockPlayerRepository implements PlayerRepository {
 ./mvnw spring-boot:run
 ```
 Visit:
-- http://localhost:8080/api/players
-- http://localhost:8080/api/player/1
+- http://\<hostname\>/api/players
+- http://\<hostname\>/api/player/\<id\>
 
 ---
 
-## ✅ Step 5: Create Unit Tests (with Copilot + Faker)
+##  📝 Step 5: Add Unit Test Dependencies (Faker + MockMVC) 
 
-### Add Faker to pom.xml
+### Add Faker dependency to pom.xml
+> *Prompt:  
+> Add the following dependency `javafaker` to the pom.xml file to use JavaFaker in tests only:  
+
 ```xml
 <dependency>
   <groupId>com.github.javafaker</groupId>
   <artifactId>javafaker</artifactId>
   <version>1.0.2</version>
+  <scope>test</scope>
 </dependency>
 ```
 
-### Sample Prompts for Copilot:
-```java
-// test getAll returns non-empty list
-// test getPlayer returns correct player
-// test getPlayer returns null for unknown ID
-// test add player with Faker name and score
-```
-
-Use Faker like:
-```java
-Faker faker = new Faker();
-String name = faker.name().fullName();
-int score = faker.number().numberBetween(0, 10);
+### Add MockMVC dependency to pom.xml
+> *Prompt:  
+> Add the necessary dependency for MockMvc to the pom.xml file so that MockMvc can be used in test classes.*
+ 
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <scope>test</scope>
+</dependency>
 ```
 
 ---
 
-## ✅ Step 6: Run Unit Tests Locally
+## Step 6: 🧪 Create Unit test with MockMVC + Fakerusing Copilot:
+> *Prompt:  
+> Create the following Unit test classes in PlayerApp/src/test/java/com/example/PlayerApp/: 
+> PlayerServiceTest.java
+> PlayerControllerTest.java
+> PlayerServiceTest.java: test PlayerService methods (e.g., getAll, getById), using custom Player objects.  
+> PlayerControllerTest.java: test PlayerController endpoints (GET /players, GET /player/{id}) using MockMvc.  
+> For both classes, include tests for:  
+> getAll returns non-empty list  
+> getPlayer returns correct player  
+> getPlayer returns null for unknown ID  
+> add player with Faker name and score.*
+
+#### ✅ Outcome Classes:
+```java
+@WebMvcTest
+class PlayerControllerTest {
+
+ ...
+
+    @Test
+    void getAllReturnsNonEmptyList() throws Exception { ... }
+
+    @Test
+    void getPlayerReturnsCorrectPlayer() throws Exception { ... }
+
+    @Test
+    void getPlayerReturnsNotFoundForUnknownId() throws Exception { ... }
+
+    @Test
+    void addPlayerWithFakerNameAndScore() { ... }
+
+}
+```
+```java
+class PlayerServiceTest {
+
+    private PlayerRepository repository;
+    private PlayerService service;
+    private Faker faker;
+
+    @BeforeEach
+    void setUp() { ... }
+
+    @Test
+    void getAllReturnsNonEmptyList() { ... }
+
+    @Test
+    void getPlayerReturnsCorrectPlayer() { ... }
+
+    @Test
+    void getPlayerReturnsNullForUnknownId() { ... }
+
+    @Test
+    void addPlayerWithFakerNameAndScore() { ... }
+}
+```
+
+---
+
+## ✅ Step 7: Run Unit Tests Locally
 ```bash
 ./mvnw test
 ```
 
 ---
 
-## ✅ Step 7: Generate ci.yml (with Copilot)
+## ✅ Step 8: Generate ci.yml (with Copilot)
 
 ### .github/workflows/ci.yml
 ```yaml
@@ -243,7 +309,7 @@ jobs:
 
 ---
 
-## ✅ Step 8: Generate cd.yml for Azure Deployment
+## ✅ Step 9: Generate cd.yml for Azure Deployment
 
 ### .github/workflows/cd.yml
 ```yaml
@@ -275,7 +341,7 @@ jobs:
 
 ---
 
-## ✅ Step 9: Test Deployed API
+## ✅ Step 10: Test Deployed API
 
 Visit:
 - https://<YOUR-APP>.azurewebsites.net/api/players
@@ -289,7 +355,7 @@ Visit:
 |----------------------------|------------------------------------|
 | Build Spring App           | `start.spring.io` + Copilot        |
 | Create Model + Controller  | Copilot inline prompts             |
-| Write Tests                | Copilot + Faker                    |
+| Write Tests                | Copilot + Faker + MockMVC          |
 | CI                         | GitHub Actions YAML via Copilot    |
 | CD to Azure                | YAML + Azure publish profile       |
 | Test via Browser/Postman   | API + Copilot-generated data       |
