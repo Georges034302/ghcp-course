@@ -23,7 +23,7 @@ curl https://start.spring.io/starter.zip \
   -d name=PlayerApp \
   -d type=maven-project \
   -d language=java \
-  -d javaVersion=17 \
+  -d javaVersion=21 \
   -o PlayerApp.zip
 unzip PlayerApp.zip
 cd PlayerApp
@@ -155,10 +155,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: Build and test with Maven
         run: mvn clean install
@@ -184,7 +184,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn clean package
