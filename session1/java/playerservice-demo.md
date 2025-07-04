@@ -141,12 +141,14 @@ public class PlayerController {
 
 ### 📄 MockPlayerRepository
 > *Prompt:  
-> Implement the MockPlayerRepository class in PlayerApp/repository.  
+> Create MockPlayerRepository.java class in  
+> /workspaces/ghcp-course/session1/java/PlayerApp/src/main/java/com/example/PlayerApp/repository/  
 > Annotate with @Repository.  
 > Use a private final List<Player> called players.  
 > In the constructor, add 5 new Player() objects to the list using a loop.  
 > Implement getById(String id): return the Player with the matching id, or null if not found.  
 > Implement getAll(): return the list of players.*
+
 
 
 ```bash
