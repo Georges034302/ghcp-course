@@ -37,7 +37,7 @@ Run the app:
 ./mvnw spring-boot:run
 ```
 ---
-## Step 2: Project Structure with Copilot
+## 📁 Step 2: Project Structure with Copilot
 
 > *Prompt: Create this Spring Boot structure under `com.example.PlayerApp`:*
 ```
@@ -60,7 +60,7 @@ src/main/java/com/example/PlayerApp/
 
 ---
 
-## ✅ Step 3: Develop Model, Repository, and Service (with Copilot)
+## 🛠️ Step 3: Develop Model, Repository, and Service (with Copilot)
 
 ### 📄 Player.java (Model)
 > *Prompt:
@@ -98,8 +98,6 @@ public interface PlayerRepository {
     List<Player> getAll();
 }
 ```
-
-Then implement it with mock data.
 
 ---
 
@@ -213,7 +211,10 @@ Visit:
 
 ---
 
-## Step 6: 🧪 Create Unit test with MockMVC + Fakerusing Copilot:
+## 🧪 Step 6: Create Unit test with MockMVC + Fakerusing Copilot:
+
+
+### 📄 PlayerServiceTest.java and PlayerControllerTest.java
 > *Prompt:  
 > Create the following Unit test classes in PlayerApp/src/test/java/com/example/PlayerApp/: 
 > PlayerServiceTest.java
@@ -287,7 +288,7 @@ class PlayerServiceTest {
 
 ---
 
-## ✅ Step 8: Generate ci.yml (with Copilot)
+## 🤖 Step 8: Generate ci.yml (with Copilot)
 
 ### .github/workflows/ci.yml
 ```yaml
@@ -316,7 +317,7 @@ jobs:
 
 ---
 
-## ✅ Step 9: Generate cd.yml for Azure Deployment
+## 🚢 Step 9: Generate cd.yml for Azure Deployment
 
 ### .github/workflows/cd.yml
 ```yaml
