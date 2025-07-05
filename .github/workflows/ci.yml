@@ -1,27 +1,21 @@
-name: .NET 8 CI
+name: Java CI
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
         with:
-          dotnet-version: '8.0.x'
+          java-version: '21'
+          distribution: 'temurin'
 
-      - name: Restore dependencies
-        run: dotnet restore session1/dotnet/ProductService.Tests/ProductService.Tests.csproj
-
-      - name: Build
-        run: dotnet build session1/dotnet/ProductService.Tests/ProductService.Tests.csproj --no-restore --configuration Release
-
-      - name: Run all tests
-        run: dotnet test session1/dotnet/ProductService.Tests/ProductService.Tests.csproj --no-build --configuration Release --verbosity normal
+      - name: Build and test with Maven
+        run: mvn

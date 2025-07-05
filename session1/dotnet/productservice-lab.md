@@ -1,4 +1,4 @@
-# 🚀 GHCP Instructor Demo – ProductService (.NET 6) with Copilot, Bogus, Local UI
+# 🚀 GHCP Lab – ProductService (.NET 8) with Copilot, Bogus, Local UI
 
 ## 🧱 Overview
 

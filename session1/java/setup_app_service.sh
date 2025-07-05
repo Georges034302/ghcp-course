@@ -1,15 +1,26 @@
 #!/bin/bash
 
+# Load environment variables from .env
+set -a
+source .env
+set +a
+
+# Check ADMIN_TOKEN is set
+if [[ -z "$ADMIN_TOKEN" ]]; then
+  echo "❌ ADMIN_TOKEN not set in .env!"
+  exit 1
+fi
+
 # ==== CONFIGURE THESE VARIABLES ====
-RG_NAME="my-ghcp-demo-rg"
+RG_NAME="ghcp-demo-rg"
 LOCATION="australiaeast"
-PLAN_NAME="my-ghcp-demo-plan"
-APP_NAME="my-ghcp-demo-app-$(openssl rand -hex 3)"   # Must be globally unique
+PLAN_NAME="ghcp-demo-plan"
+APP_NAME="java-sb-api-app-$(openssl rand -hex 3)"   # Must be globally unique
 GH_SECRET_NAME="AZURE_WEBAPP_PUBLISH_PROFILE"
 
 # ==== LOGIN TO AZURE ====
-echo "🔐 Logging in to Azure..."
-az login
+# echo "🔐 Logging in to Azure..."
+# az login
 
 echo "🌐 Registering Microsoft.Web provider (if needed)..."
 az provider register --namespace Microsoft.Web
@@ -29,7 +40,7 @@ az webapp create \
   --resource-group $RG_NAME \
   --plan $PLAN_NAME \
   --name $APP_NAME \
-  --runtime "JAVA|21-java11"
+  --runtime "JAVA|21-java21"
 
 echo "✅ Your Azure Web App Name is: $APP_NAME"
 
@@ -41,10 +52,35 @@ az webapp deployment list-publishing-profiles \
 
 echo "📄 Downloaded PublishProfile.xml"
 
+# ==== Authenticate GitHub CLI with admin token ====
+
+echo "🔑 Clearing interfering environment variables..."
+unset GH_TOKEN
+unset GITHUB_TOKEN
+
+echo "🔐 Logging out any existing GitHub CLI session..."
+gh auth logout --hostname github.com || true
+
+echo "🔑 Logging in to GitHub CLI with admin PAT from .env..."
+echo "$ADMIN_TOKEN" | gh auth login --with-token --hostname github.com
+
+# Verify authentication success
+if gh auth status --hostname github.com --show-token &>/dev/null; then
+  echo "✅ gh CLI authenticated for github.com!"
+else
+  echo "❌ gh CLI authentication failed!"
+  exit 1
+fi
+
 echo "🔑 Uploading publish profile as GitHub secret: $GH_SECRET_NAME..."
 gh secret set $GH_SECRET_NAME < PublishProfile.xml
 
 echo "✅ Set GitHub secret: $GH_SECRET_NAME"
+
+echo "🔑 Uploading app name as GitHub secret: APP_NAME..."
+echo "$APP_NAME" | gh secret set APP_NAME
+
+echo "✅ Set GitHub secrets: $GH_SECRET_NAME and APP_NAME"
 
 echo "🧹 Cleaning up local publish profile..."
 rm PublishProfile.xml

@@ -289,41 +289,75 @@ class PlayerServiceTest {
 ---
 
 ## 🤖 Step 8: Generate ci.yml (with Copilot)
+> Prompt:
+> Provide CLi to create `.github/workflows/ci.yml` in github root repo
+> Provide GitHub Actions YAML workflow `ci.yml` with the following specifications:
+> Trigger on push events to the `main` branch
+> Run on the latest Ubuntu environment
+> Checkout the repository code using `actions/checkout@v3`
+> Setup Java JDK 21 using the Eclipse Temurin distribution with `actions/setup-java@v3`
+> Format the output as a valid YAML file.
 
 #### ✅ Expected Outcome:
 
+```bash
+cd /workspaces/ghcp-course
+mkdir -p .github/workflows
+touch .github/workflows/ci.yml
+```
+
 ### .github/workflows/ci.yml
 ```yaml
-# GitHub Actions to build and test Spring Boot app with Maven
+
 name: Java CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Build and test with Maven
-        run: mvn clean install
+        run: mvn
 ```
 
 ---
 
 ## 🚢 Step 9: Generate cd.yml for Azure Deployment
 
+> Prompt:
+> Provide CLi to create `.github/workflows/cd.yml` in github root repo
+> Provide GitHub Actions YAML workflow `cd.yml` with the following specifications:
+> triggers on push events to the `main` branch
+> Run on the latest Ubuntu environment
+> Checkout the repository using `actions/checkout@v3`
+> Setup Java JDK 21 with Eclipse Temurin using `actions/setup-java@v3`
+> Build the project with Maven using `mvn clean package`
+> Deploy the built JAR file located in `target/*.jar` to Azure Web App using `azure/webapps-deploy@v2`
+> Use the secret `AZURE_WEBAPP_PUBLISH_PROFILE` for deployment authentication
+> Use the secret `APP_NAME` to specify the `app-name` parameter for deployment
+> Format the output as a valid YAML file
+
+
 #### ✅ Expected Outcome:
 
-### .github/workflows/cd.yml
+```bash
+cd /workspaces/ghcp-course
+mkdir -p .github/workflows
+touch .github/workflows/cd.yml
+```
+
 ```yaml
 name: Deploy to Azure
 
@@ -335,18 +369,22 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Build with Maven
         run: mvn clean package
+
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: YOUR_APP_NAME
+          app-name: ${{ secrets.APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: target/*.jar
 ```
@@ -356,8 +394,8 @@ jobs:
 ## ✅ Step 10: Test Deployed API
 
 Visit:
-- https://<YOUR-APP>.azurewebsites.net/api/players
-- https://<YOUR-APP>.azurewebsites.net/api/player/1
+- https://<APP_NAME>.azurewebsites.net/api/players
+- https://<APP_NAME>.azurewebsites.net/api/player/1
 
 ---
 
