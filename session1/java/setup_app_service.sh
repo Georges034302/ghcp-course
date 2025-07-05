@@ -25,11 +25,13 @@ if [[ -z "$APP_ID" ]]; then
   echo "🆕 Creating new Azure AD app and service principal..."
   APP_ID=$(az ad app create --display-name "$SP_NAME" --query appId -o tsv)
   az ad sp create --id "$APP_ID" > /dev/null
-  echo "🔑 Assigning Contributor role to the service principal on the subscription..."
-  az role assignment create --assignee "$APP_ID" --role Contributor --scope "/subscriptions/$SUBSCRIPTION_ID"
 else
   echo "✅ Found existing service principal."
 fi
+
+echo "🔑 Ensuring Contributor role assignment on the subscription..."
+az role assignment create --assignee "$APP_ID" --role Contributor --scope "/subscriptions/$SUBSCRIPTION_ID" || \
+echo "ℹ️  Contributor role may already be assigned."
 
 echo "🔑 Resetting service principal credentials..."
 CLIENT_SECRET=$(az ad app credential reset --id "$APP_ID" --append --query password -o tsv)
@@ -47,7 +49,8 @@ echo "☁️  Creating Web App: $APP_NAME (Java 21, Linux)..."
 az webapp create --resource-group "$RG_NAME" --plan "$PLAN_NAME" --name "$APP_NAME" --runtime "JAVA|21-java21" --output none
 
 echo "⬇️  Downloading publish profile..."
-az webapp deployment list-publishing-profiles --name "$APP_NAME" --resource-group "$RG_NAME" --output json > PublishProfile.json
+PUBLISH_PROFILE=$(az webapp deployment list-publishing-profiles --name "$APP_NAME" --resource-group "$RG_NAME" --output json | jq -r '.[0].publishingProfile')
+echo "$PUBLISH_PROFILE" > PublishProfile.xml
 
 echo "🔒 Generating Azure credentials JSON..."
 AZURE_CREDENTIALS=$(cat <<EOF
@@ -85,7 +88,7 @@ echo "🔑 Uploading Azure credentials as GitHub secret: AZURE_CREDENTIALS..."
 echo "$AZURE_CREDENTIALS" | gh secret set AZURE_CREDENTIALS
 
 echo "🧹 Cleaning up local publish profile..."
-rm PublishProfile.json
+rm PublishProfile.xml
 
 echo "🎉 Done! Your Azure resources are ready and your GitHub secrets are set."
 echo "👉 Use app-name: $APP_NAME in your workflows to refer to this app."
