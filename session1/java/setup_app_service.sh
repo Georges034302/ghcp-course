@@ -48,10 +48,6 @@ az appservice plan create --name "$PLAN_NAME" --resource-group "$RG_NAME" --sku 
 echo "☁️  Creating Web App: $APP_NAME (Java 21, Linux)..."
 az webapp create --resource-group "$RG_NAME" --plan "$PLAN_NAME" --name "$APP_NAME" --runtime "JAVA|21-java21" --output none
 
-echo "⬇️  Downloading publish profile..."
-PUBLISH_PROFILE=$(az webapp deployment list-publishing-profiles --name "$APP_NAME" --resource-group "$RG_NAME" --output json | jq -r '.[0].publishingProfile')
-echo "$PUBLISH_PROFILE" > PublishProfile.xml
-
 echo "🔒 Generating Azure credentials JSON..."
 AZURE_CREDENTIALS=$(cat <<EOF
 {
