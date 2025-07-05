@@ -306,7 +306,6 @@ mkdir -p .github/workflows
 touch .github/workflows/ci.yml
 ```
 
-### .github/workflows/ci.yml
 ```yaml
 
 name: Java CI
