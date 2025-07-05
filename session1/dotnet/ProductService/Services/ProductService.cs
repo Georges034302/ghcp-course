@@ -24,5 +24,9 @@ namespace ProductService.Services
 
         public void Add(Product product)
         {
-            _products.Add(product);
+            int nextId = _products.Any() ? _products.Max(p => p.Id) + 1 : 1;
+            var newProduct = product with { Id = nextId };
+            _products.Add(newProduct);
         }
+    }
+}

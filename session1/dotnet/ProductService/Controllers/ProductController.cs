@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProductService;
 using ProductService.Models;
 using ProductService.Services;
 
@@ -8,9 +9,9 @@ namespace ProductService.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ProductService _service;
+        private readonly ProductService.Services.ProductService _service;
 
-        public ProductController(ProductService service)
+        public ProductController(ProductService.Services.ProductService service)
         {
             _service = service;
         }
@@ -34,7 +35,8 @@ namespace ProductService.Controllers
         public ActionResult<Product> Post(Product product)
         {
             _service.Add(product);
-            return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
+            var added = _service.GetAll().Last(); // Get the last added product (with correct ID)
+            return CreatedAtAction(nameof(Get), new { id = added.Id }, added);
         }
     }
 }

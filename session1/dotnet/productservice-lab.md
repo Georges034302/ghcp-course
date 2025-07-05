@@ -83,7 +83,11 @@ namespace ProductService.Models
 > *Copilot Prompt:\
 > Create a `ProductService` class in `Services/ProductService.cs`.  
 > Add a private readonly `List<Product>` initialized with two products (e.g., Laptop, Phone).  
-> Provide methods: `GetAll` (returns all products), `GetById(int id)` (returns the product with that ID or null), and `Add(Product product)` (adds a new product to the list).  
+> Provide methods:\
+> `GetAll` (returns all products)\
+> `GetById(int id)` (returns the product with that ID or null)\
+> `Add(Product product)` (Get the last added product (with correct ID) and increment new id by 1).  
+> Use namespace `ProductService.Services`.*
 > Use namespace `ProductService.Services`.*
 
 **✅ Expected Outcome:**
@@ -148,9 +152,9 @@ namespace ProductService.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ProductService _service;
+        private readonly ProductService.Services.ProductService _service;
 
-        public ProductController(ProductService service)
+        public ProductController(ProductService.Services.ProductService service)
         {
             _service = service;
         }
@@ -295,7 +299,7 @@ app.MapControllers();
 dotnet run
 ```
 
-- Open [http://localhost:5000](http://localhost:5000) in your browser.
+- Open (http://localhost:5000) in your browser.
 - Visit `/swagger` for API docs and testing.
 
 ---

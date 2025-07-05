@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(); // Add this if you have controllers
+builder.Services.AddSingleton<ProductService.Services.ProductService>();
 
 var app = builder.Build();
 
@@ -15,6 +17,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Serve index.html as the default page and enable static files from wwwroot
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.MapControllers(); // Map attribute-routed controllers
 
 var summaries = new[]
 {
