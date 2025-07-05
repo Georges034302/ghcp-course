@@ -41,16 +41,17 @@ mkdir Models Services Controllers wwwroot
 ```
 ProductService/
 ├── Controllers/
+│   └── WeatherForecastController.cs
 ├── Models/
 ├── Services/
 ├── wwwroot/
-├── Program.cs
-├── Startup.cs           (if .NET 5; for .NET 6+, logic in Program.cs)
 ├── ProductService.csproj
+├── Program.cs
+├── appsettings.Development.json
 ├── appsettings.json
-├── Properties/
-│   └── launchSettings.json
-└── WeatherForecast.cs   (default template file, can be deleted)
+├── WeatherForecast.cs
+└── Properties/
+    └── launchSettings.json
 ```
 
 ---
