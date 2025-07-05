@@ -4,20 +4,20 @@
 
 | Component | Description |
 |-----------|-------------|
-| App       | .NET 6 Web API (`ProductService`) |
+| App       | .NET 8 Web API (`ProductService`) |
 | Data      | `Product` model (Id, Name, Price), in-memory list |
 | API       | `GET /api/product`, `GET /api/product/{id}`, `POST /api/product` |
 | UI        | HTML/JS in `wwwroot/index.html` served with API |
 | Test      | xUnit tests with **Bogus** for test data |
 | Copilot   | Automated code/test generation |
 | CI        | GitHub Actions for **build + test** |
-| Tools     | VS Code, IntelliJ, Eclispse, GitHub Copilot, .NET 6 SDK |
+| Tools     | VS Code, IntelliJ, Eclispse, GitHub Copilot, .NET 8 SDK |
 
 ---
 
 ## 🎯 Learning Objectives
 
-- Build a RESTful .NET 6 Web API (`ProductService`)
+- Build a RESTful .NET 8 Web API (`ProductService`)
 - Implement endpoints: list all, get by ID, add product
 - Generate unit tests with **Copilot**; enhance with **Bogus** for fake/edge-case data
 - Serve an interactive HTML UI for local testing
@@ -27,7 +27,7 @@
 
 ## ✅ Step 1: Scaffold the .NET API Project
 > *Copilot Prompt:\
-> Generate the CLI commands to create a new .NET 6 Web API project called `ProductService` in the current directory.\
+> Generate the CLI commands to create a new .NET 8 Web API project called `ProductService` in the current directory.\
 > Then create the folders: `Models`, `Services`, `Controllers`, and `wwwroot` inside the project folder.*
 
 **✅ Expected CLI:**
@@ -293,7 +293,7 @@ app.MapControllers();
 ## ✅ Step 5: Run and Test the API Locally
 
 > *Copilot Prompt:\
-> How do I run and test my .NET 6 Web API and static HTML UI locally using the CLI?*
+> How do I run and test my .NET 8 Web API and static HTML UI locally using the CLI?*
 
 **✅ Expected Outcome:**
 
@@ -319,7 +319,7 @@ dotnet run
 ### 5.1 Create the Test Project
 
 > *Copilot Prompt:\
-> How do I add an xUnit test project for my .NET 6 solution and reference the main API project (e.g. dotnet)?\
+> How do I add an xUnit test project for my .NET 8 solution and reference the main API project (e.g. dotnet)?\
 > Also, add the `Bogus` NuGet package for fake data.*
 
 **✅ Expected Outcome:**
@@ -467,12 +467,11 @@ All tests should pass and output should show in the terminal.
 > Generate a GitHub Actions workflow in `ci.yaml` that:  
 > Uses the latest Ubuntu runner  
 > Checks out my code  
-> Sets up .NET 6  
+> Sets up .NET 8  
 > Restores dependencies  
 > Builds the solution  
 > Runs all tests with `dotnet test`  
-> The workflow should work for a .NET 6 Web API with a separate test project.*
-
+> The workflow should work for a .NET 8 Web API with a separate test project.*
 
 **✅ Expected Outcome:**
 
@@ -483,7 +482,7 @@ touch .github/workflows/ci.yml
 ```
 
 ```yaml
-name: .NET CI
+name: .NET 8 CI
 
 on:
   push:
@@ -492,20 +491,25 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET 6
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --configuration Release
+
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --configuration Release
 ```
 
 ---
