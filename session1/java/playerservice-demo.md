@@ -341,6 +341,7 @@ jobs:
 > Provide GitHub Actions YAML workflow `cd.yml` with the following specifications:
 > triggers on push events to the `main` branch
 > Run on the latest Ubuntu environment
+> Login to Azure using `azure/login@v1` with the secret `AZURE_CREDENTIALS`
 > Checkout the repository using `actions/checkout@v3`
 > Setup Java JDK 21 with Eclipse Temurin using `actions/setup-java@v3`
 > Build the project with Maven using `mvn clean package`
@@ -380,13 +381,19 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package
+        working-directory: session1/java/PlayerApp
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.APP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: target/*.jar
+          package: session1/java/PlayerApp/target/*.jar
 ```
 
 ---
