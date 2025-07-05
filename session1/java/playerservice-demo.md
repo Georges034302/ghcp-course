@@ -398,8 +398,12 @@ jobs:
 ---
 
 ## ✅ Step 10: Test Deployed API
+> *Prompt: \
+> Given APP_NAME = java-sb-api-app-17d309 \
+> Provide URL to get all players \
+> Provide URL to get player by id = < >*
 
-Visit:
+#### ✅ Expected Outcome:
 - https://<APP_NAME>.azurewebsites.net/api/players
 - https://<APP_NAME>.azurewebsites.net/api/player/1
 
