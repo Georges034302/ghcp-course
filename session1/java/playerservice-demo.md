@@ -72,13 +72,13 @@ src/main/java/com/example/PlayerApp/
 >  Include a parameterized constructor for setting all fields manually\
 >  getters and setters for all fields.*
 
-#### ✅ Outcome Classes:
+#### ✅ Expected Outcome:
 ```java
 public class Player {
     private String id; 
     private String name; 
     private int score; 
-    // constructor, getters, setters
+    // constructors, getters, setters
 }
 ```
 
@@ -108,7 +108,7 @@ public interface PlayerRepository {
 > Implement logic to call the repository methods.  
 > Use Player and PlayerRepository from their respective packages.*
 
-#### ✅ Outcome Classes:
+#### ✅ Expected Outcome:
 ```java
 public class PlayerService {
     ...
@@ -125,7 +125,7 @@ public class PlayerService {
 > Add endpoint GET /player/{id} → returns a Player as ResponseEntity, or 404 if not found.  
 > Add endpoint GET /players → returns all players as a list.*
 
-#### ✅ Outcome Classes:
+#### ✅ Expected Outcome:
 ```java
 @RestController
 @RequestMapping("/api")
@@ -153,7 +153,7 @@ public class PlayerController {
 > Implement getById(String id): return the Player with the matching id, or null if not found.  
 > Implement getAll(): return the list of players.*
 
-#### ✅ Outcome Classes:
+#### ✅ Expected Outcome:
 ```java
 @Repository
 public class MockPlayerRepository implements PlayerRepository {
@@ -227,7 +227,7 @@ Visit:
 > getPlayer returns null for unknown ID  
 > add player with Faker name and score.*  
 
-#### ✅ Outcome Classes:
+#### ✅ Expected Outcome:
 ```java
 @WebMvcTest(controllers = com.example.PlayerApp.controller.PlayerController.class)
 class PlayerControllerTest {
@@ -290,6 +290,8 @@ class PlayerServiceTest {
 
 ## 🤖 Step 8: Generate ci.yml (with Copilot)
 
+#### ✅ Expected Outcome:
+
 ### .github/workflows/ci.yml
 ```yaml
 # GitHub Actions to build and test Spring Boot app with Maven
@@ -318,6 +320,8 @@ jobs:
 ---
 
 ## 🚢 Step 9: Generate cd.yml for Azure Deployment
+
+#### ✅ Expected Outcome:
 
 ### .github/workflows/cd.yml
 ```yaml
