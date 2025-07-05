@@ -11,7 +11,7 @@
 | Test      | xUnit tests with **Bogus** for test data |
 | Copilot   | Automated code/test generation |
 | CI        | GitHub Actions for **build + test** |
-| Tools     | VS Code, GitHub Copilot, .NET 6 SDK |
+| Tools     | VS Code, IntelliJ, Eclispse, GitHub Copilot, .NET 6 SDK |
 
 ---
 
@@ -26,12 +26,31 @@
 ---
 
 ## ✅ Step 1: Scaffold the .NET API Project
+> *Copilot Prompt:\
+> Generate the CLI commands to create a new .NET 6 Web API project called `ProductService` in the current directory.\
+> Then create the folders: `Models`, `Services`, `Controllers`, and `wwwroot` inside the project folder.*
 
+**✅ Expected CLI:**
 ```bash
 dotnet new webapi -n ProductService
 cd ProductService
 mkdir Models Services Controllers wwwroot
-code .
+```
+
+**✅ Expected Outcome - Project Structure:**
+```
+ProductService/
+├── Controllers/
+├── Models/
+├── Services/
+├── wwwroot/
+├── Program.cs
+├── Startup.cs           (if .NET 5; for .NET 6+, logic in Program.cs)
+├── ProductService.csproj
+├── appsettings.json
+├── Properties/
+│   └── launchSettings.json
+└── WeatherForecast.cs   (default template file, can be deleted)
 ```
 
 ---
