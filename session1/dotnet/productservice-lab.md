@@ -279,6 +279,8 @@ namespace ProductService.Controllers
 > `app.MapControllers();`  
 > Make sure the rest of my API and Swagger setup stays the same.*
 
+**✅ Expected Outcome:**
+*The following are added to `Program.cs`*
 
 ```csharp
 app.UseDefaultFiles();
@@ -299,8 +301,16 @@ app.MapControllers();
 dotnet run
 ```
 
-- Open (http://localhost:5000) in your browser.
-- Visit `/swagger` for API docs and testing.
+> *Copilot Prompt:\
+> List the API endpoints for my ProductService controller so I can test them with curl, Postman, or a browser.  
+> GET all products: `/api/product`  
+> GET product by ID: `/api/product/{id}`  
+> Show the full sample URLs using `https://myserver.com`.*
+
+**✅ Expected Outcome:**
+
+- GET all products: https://myserver.com/api/product
+- GET product by {id}: https://myserver.com/api/product/{id}
 
 ---
 
