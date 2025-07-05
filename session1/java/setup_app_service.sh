@@ -25,6 +25,8 @@ if [[ -z "$APP_ID" ]]; then
   echo "🆕 Creating new Azure AD app and service principal..."
   APP_ID=$(az ad app create --display-name "$SP_NAME" --query appId -o tsv)
   az ad sp create --id "$APP_ID" > /dev/null
+  echo "🔑 Assigning Contributor role to the service principal on the subscription..."
+  az role assignment create --assignee "$APP_ID" --role Contributor --scope "/subscriptions/$SUBSCRIPTION_ID"
 else
   echo "✅ Found existing service principal."
 fi
@@ -83,7 +85,7 @@ echo "🔑 Uploading Azure credentials as GitHub secret: AZURE_CREDENTIALS..."
 echo "$AZURE_CREDENTIALS" | gh secret set AZURE_CREDENTIALS
 
 echo "🧹 Cleaning up local publish profile..."
-rm PublishProfile.xml
+rm PublishProfile.json
 
 echo "🎉 Done! Your Azure resources are ready and your GitHub secrets are set."
 echo "👉 Use app-name: $APP_NAME in your workflows to refer to this app."
