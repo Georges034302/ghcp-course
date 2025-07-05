@@ -319,15 +319,25 @@ dotnet run
 ### 5.1 Create the Test Project
 
 > *Copilot Prompt:\
-> How do I add an xUnit test project for my .NET 6 solution and reference the main API project? Also, add the `Bogus` NuGet package for fake data.*
+> How do I add an xUnit test project for my .NET 6 solution and reference the main API project (e.g. dotnet)?\
+> Also, add the `Bogus` NuGet package for fake data.*
 
 **✅ Expected Outcome:**
 
 ```bash
+cd /<path-to-dir>/dotnet
 dotnet new xunit -n ProductService.Tests
 cd ProductService.Tests
 dotnet add reference ../ProductService/ProductService.csproj
 dotnet add package Bogus
+```
+
+**✅ Expected Outcome:**
+
+```
+ProductService.Tests/
+├── ProductService.Tests.csproj
+└── ProductServiceTests.cs
 ```
 
 ---
@@ -335,7 +345,8 @@ dotnet add package Bogus
 ### 5.2 Write Unit Tests in `ProductServiceTests.cs`
 
 > *Copilot Prompt:\
-> In `ProductService.Tests/ProductServiceTests.cs`, write xUnit tests for ProductService.  
+> Create Test file `ProductService.Tests/ProductServiceTests.cs`, in ProductService.Tests.
+> Write xUnit tests for ProductService.  
 > Use `Bogus` to generate fake Product data  
 > Cover:  
 > GetAll returns non-empty list  
@@ -352,60 +363,78 @@ using ProductService.Models;
 using ProductService.Services;
 using Bogus;
 using Xunit;
+using System.Linq;
 
 public class ProductServiceTests
 {
+    private ProductService.Services.ProductService CreateService() => new();
+
     private Product GenerateFakeProduct()
     {
         var faker = new Faker<Product>()
             .CustomInstantiator(f => new Product(
-                f.Random.Int(1000, 9999),
+                0,
                 f.Commerce.ProductName(),
-                f.Random.Decimal(10, 999)));
+                f.Random.Decimal(1, 1000)
+            ));
         return faker.Generate();
     }
 
     [Fact]
-    public void GetAll_ReturnsSeededProducts()
+    public void GetAll_ReturnsNonEmptyList()
     {
-        var service = new ProductService();
-        var all = service.GetAll();
-        Assert.NotEmpty(all);
+        var service = CreateService();
+        var products = service.GetAll();
+        Assert.NotEmpty(products);
     }
 
     [Fact]
-    public void GetById_ValidId_ReturnsProduct()
+    public void GetById_ReturnsCorrectProduct_ForValidId()
     {
-        var service = new ProductService();
+        var service = CreateService();
         var product = service.GetById(1);
         Assert.NotNull(product);
         Assert.Equal(1, product.Id);
     }
 
     [Fact]
-    public void GetById_UnknownId_ReturnsNull()
+    public void GetById_ReturnsNull_ForUnknownId()
     {
-        var service = new ProductService();
-        var product = service.GetById(99999);
+        var service = CreateService();
+        var product = service.GetById(9999);
         Assert.Null(product);
     }
 
     [Fact]
-    public void Add_AddsProductToList()
+    public void Add_InsertsProduct_VerifyGetAllIncludesIt()
     {
-        var service = new ProductService();
-        var newProduct = new Product(100, "Test", 99.99M);
+        var service = CreateService();
+        var newProduct = new Product(0, "TestProduct", 123.45m);
         service.Add(newProduct);
-        Assert.Contains(service.GetAll(), p => p.Id == 100);
+        Assert.Contains(service.GetAll(), p => p.Name == "TestProduct" && p.Price == 123.45m);
     }
 
     [Fact]
-    public void Add_RandomProduct_Bogus()
+    public void Add_WithRandomProductFromBogus()
     {
-        var service = new ProductService();
-        var randomProduct = GenerateFakeProduct();
-        service.Add(randomProduct);
-        Assert.Contains(service.GetAll(), p => p.Id == randomProduct.Id);
+        var service = CreateService();
+        var fakeProduct = GenerateFakeProduct();
+        service.Add(fakeProduct);
+        Assert.Contains(service.GetAll(), p => p.Name == fakeProduct.Name && p.Price == fakeProduct.Price);
+    }
+
+    [Fact]
+    public void Add_WithNegativePriceOrEmptyName_EdgeCase()
+    {
+        var service = CreateService();
+        var negativePriceProduct = new Product(0, "BadProduct", -50m);
+        var emptyNameProduct = new Product(0, "", 10m);
+
+        service.Add(negativePriceProduct);
+        service.Add(emptyNameProduct);
+
+        Assert.Contains(service.GetAll(), p => p.Name == "BadProduct" && p.Price == -50m);
+        Assert.Contains(service.GetAll(), p => p.Name == "" && p.Price == 10m);
     }
 }
 ```
@@ -415,11 +444,15 @@ public class ProductServiceTests
 ### 5.3 Run the Unit Tests
 
 > *Copilot Prompt:\
-> How do I run all xUnit tests from the CLI for my ProductService solution?*
+> Change directory (`cd`) to the `ProductService.Tests` folder (from any location).  
+> Add the `Bogus` NuGet package (latest available version) to the test project using the CLI.  
+> Then, run all xUnit tests from the CLI for the project.*
+
 
 **✅ Expected Outcome:**
 
 ```bash
+cd /<path-to-dir>/ProductService.Tests
 dotnet test
 ```
 
@@ -430,13 +463,24 @@ All tests should pass and output should show in the terminal.
 ## ✅ Step 7: Add GitHub Actions CI for Build & Test
 
 > *Copilot Prompt:\
-> Generate a GitHub Actions workflow YAML for building and testing my .NET 6 Web API and test project.  
-> Use latest Ubuntu runner  
-> Steps: checkout, setup .NET 6, restore, build, test*
+> Provide CLI to create`.github/workflows/ci.yml` file in the root github repository.  
+> Generate a GitHub Actions workflow in `ci.yaml` that:  
+> Uses the latest Ubuntu runner  
+> Checks out my code  
+> Sets up .NET 6  
+> Restores dependencies  
+> Builds the solution  
+> Runs all tests with `dotnet test`  
+> The workflow should work for a .NET 6 Web API with a separate test project.*
+
 
 **✅ Expected Outcome:**
 
-Create `.github/workflows/ci.yml`:
+```bash
+cd /workspaces/ghcp-course
+mkdir -p .github/workflows
+touch .github/workflows/ci.yml
+```
 
 ```yaml
 name: .NET CI
