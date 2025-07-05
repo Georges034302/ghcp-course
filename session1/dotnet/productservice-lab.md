@@ -61,8 +61,9 @@ ProductService/
 ### 2.1 Create the Product Model
 
 > *Copilot Prompt:\
-> Create a C# record in `Models/Product.cs` named `Product`.  
-> It should have properties: `Id` (int), `Name` (string), `Price` (decimal).  
+> Create a new file `Product.cs` in `/workspaces/ghcp-course/session1/dotnet/ProductService/Models`\
+> `Product.cs` includes the record `Product`.  
+> The record should have properties: `Id` (int), `Name` (string), `Price` (decimal).  
 > Use the `record` keyword for concise syntax.  
 > Add a namespace of `ProductService.Models`.*
 
@@ -89,6 +90,8 @@ namespace ProductService.Models
 
 ```csharp
 using ProductService.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ProductService.Services
 {
@@ -96,15 +99,24 @@ namespace ProductService.Services
     {
         private readonly List<Product> _products = new()
         {
-            new Product(1, "Laptop", 1200.00M),
-            new Product(2, "Phone", 800.00M)
+            new Product(1, "Laptop", 1200.00m),
+            new Product(2, "Phone", 800.00m)
         };
 
-        public IEnumerable<Product> GetAll() => _products;
+        public List<Product> GetAll()
+        {
+            return _products;
+        }
 
-        public Product? GetById(int id) => _products.FirstOrDefault(p => p.Id == id);
+        public Product? GetById(int id)
+        {
+            return _products.FirstOrDefault(p => p.Id == id);
+        }
 
-        public void Add(Product product) => _products.Add(product);
+        public void Add(Product product)
+        {
+            _products.Add(product);
+        }
     }
 }
 ```
