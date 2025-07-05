@@ -40,11 +40,11 @@ code .
 
 ### 2.1 Create the Product Model
 
-**Copilot Prompt:**  
-Create a C# record in `Models/Product.cs` named `Product`.  
-It should have properties: `Id` (int), `Name` (string), `Price` (decimal).  
-Use the `record` keyword for concise syntax.  
-Add a namespace of `ProductService.Models`.
+> *Copilot Prompt:\
+> Create a C# record in `Models/Product.cs` named `Product`.  
+> It should have properties: `Id` (int), `Name` (string), `Price` (decimal).  
+> Use the `record` keyword for concise syntax.  
+> Add a namespace of `ProductService.Models`.*
 
 **✅ Expected Outcome:**
 
@@ -59,11 +59,11 @@ namespace ProductService.Models
 
 ### 2.2 Implement ProductService
 
-**Copilot Prompt:**  
-Create a `ProductService` class in `Services/ProductService.cs`.  
-- Add a private readonly `List<Product>` initialized with two products (e.g., Laptop, Phone).  
-- Provide methods: `GetAll` (returns all products), `GetById(int id)` (returns the product with that ID or null), and `Add(Product product)` (adds a new product to the list).  
-- Use namespace `ProductService.Services`.
+> *Copilot Prompt:\
+> Create a `ProductService` class in `Services/ProductService.cs`.  
+> Add a private readonly `List<Product>` initialized with two products (e.g., Laptop, Phone).  
+> Provide methods: `GetAll` (returns all products), `GetById(int id)` (returns the product with that ID or null), and `Add(Product product)` (adds a new product to the list).  
+> Use namespace `ProductService.Services`.*
 
 **✅ Expected Outcome:**
 
@@ -93,15 +93,15 @@ namespace ProductService.Services
 
 ### 2.3 Create the Controller
 
-**Copilot Prompt:**  
-Generate a `ProductController` class in `Controllers/ProductController.cs`.  
-- Annotate with `[ApiController]` and `[Route("api/[controller]")]`.  
-- Inject a `ProductService` instance (direct or via DI).  
-- Implement:  
-  - `GET /api/product` (returns all products as JSON)  
-  - `GET /api/product/{id}` (returns product by ID or 404)  
-  - `POST /api/product` (accepts Product, adds to list, returns CreatedAtAction).  
-Use correct using statements and namespace `ProductService.Controllers`.
+> *Copilot Prompt:  
+> Generate a `ProductController` class in `Controllers/ProductController.cs`.  
+> Annotate with `[ApiController]` and `[Route("api/[controller]")]`.  
+> Inject a `ProductService` instance (direct or via DI).  
+> Implement:  
+> `GET /api/product` (returns all products as JSON)  
+> `GET /api/product/{id}` (returns product by ID or 404)  
+> `POST /api/product` (accepts Product, adds to list, returns CreatedAtAction).  
+> Use correct using statements and namespace `ProductService.Controllers`.*
 
 **✅ Expected Outcome:**
 
@@ -142,13 +142,13 @@ namespace ProductService.Controllers
 
 ## ✅ Step 3: Serve a Static HTML UI (`wwwroot/index.html`)
 
-**Copilot Prompt:**  
-Create a simple `index.html` file for `wwwroot` that:  
-- Shows "ProductService" title  
-- Lets users fetch all products, fetch by ID, and add a product (name + price fields)  
-- Calls the API endpoints (`/api/product`, `/api/product/{id}`) using `fetch`  
-- Displays results in `<pre>` tags  
-- Keep the JavaScript inline in the file.
+> *Copilot Prompt:\
+> Create a simple `index.html` file for `wwwroot` that:  
+> Shows "ProductService" title  
+> Lets users fetch all products, fetch by ID, and add a product (name + price fields)  
+> Calls the API endpoints (`/api/product`, `/api/product/{id}`) using `fetch`  
+> Displays results in `<pre>` tags  
+> Keep the JavaScript inline in the file.*
 
 **✅ Expected Outcome:**
 
@@ -210,8 +210,8 @@ app.MapControllers();
 
 ## ✅ Step 4: Run and Test the API Locally
 
-**Copilot Prompt:**  
-How do I run and test my .NET 6 Web API and static HTML UI locally using the CLI?
+> *Copilot Prompt:\
+> How do I run and test my .NET 6 Web API and static HTML UI locally using the CLI?*
 
 **✅ Expected Outcome:**
 
@@ -228,8 +228,8 @@ dotnet run
 
 ### 5.1 Create the Test Project
 
-**Copilot Prompt:**  
-How do I add an xUnit test project for my .NET 6 solution and reference the main API project? Also, add the `Bogus` NuGet package for fake data.
+> *Copilot Prompt:\
+> How do I add an xUnit test project for my .NET 6 solution and reference the main API project? Also, add the `Bogus` NuGet package for fake data.*
 
 **✅ Expected Outcome:**
 
@@ -244,16 +244,16 @@ dotnet add package Bogus
 
 ### 5.2 Write Unit Tests in `ProductServiceTests.cs`
 
-**Copilot Prompt:**  
-In `ProductService.Tests/ProductServiceTests.cs`, write xUnit tests for ProductService.  
-- Use `Bogus` to generate fake Product data  
-- Cover:  
-  - GetAll returns non-empty list  
-  - GetById returns correct Product for valid ID  
-  - GetById returns null for unknown ID  
-  - Add inserts a Product (verify GetAll includes it)  
-  - Add with random Product from Bogus  
-  - (Bonus) Add with negative price or empty name (edge case)
+> *Copilot Prompt:\
+> In `ProductService.Tests/ProductServiceTests.cs`, write xUnit tests for ProductService.  
+> Use `Bogus` to generate fake Product data  
+> Cover:  
+> GetAll returns non-empty list  
+> GetById returns correct Product for valid ID  
+> GetById returns null for unknown ID  
+> Add inserts a Product (verify GetAll includes it)  
+> Add with random Product from Bogus  
+> (Bonus) Add with negative price or empty name (edge case)*
 
 **✅ Expected Outcome:**
 
@@ -324,8 +324,8 @@ public class ProductServiceTests
 
 ### 5.3 Run the Unit Tests
 
-**Copilot Prompt:**  
-How do I run all xUnit tests from the CLI for my ProductService solution?
+> *Copilot Prompt:\
+> How do I run all xUnit tests from the CLI for my ProductService solution?*
 
 **✅ Expected Outcome:**
 
@@ -339,10 +339,10 @@ All tests should pass and output should show in the terminal.
 
 ## ✅ Step 6: Add GitHub Actions CI for Build & Test
 
-**Copilot Prompt:**  
-Generate a GitHub Actions workflow YAML for building and testing my .NET 6 Web API and test project.  
-- Use latest Ubuntu runner  
-- Steps: checkout, setup .NET 6, restore, build, test
+> *Copilot Prompt:\
+> Generate a GitHub Actions workflow YAML for building and testing my .NET 6 Web API and test project.  
+> Use latest Ubuntu runner  
+> Steps: checkout, setup .NET 6, restore, build, test*
 
 **✅ Expected Outcome:**
 
