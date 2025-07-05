@@ -18,4 +18,5 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: mvn
+        run: mvn clean package
+        working-directory: session1/java/PlayerApp
