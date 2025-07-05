@@ -470,7 +470,7 @@ All tests should pass and output should show in the terminal.
 > Sets up .NET 8  
 > Restores dependencies  
 > Builds the solution  
-> Runs all tests with `dotnet test`  
+> Runs all tests with `dotnet test` in /workspaces/ghcp-course/session1/dotnet/ProductService.Tests 
 > The workflow should work for a .NET 8 Web API with a separate test project.*
 
 **✅ Expected Outcome:**

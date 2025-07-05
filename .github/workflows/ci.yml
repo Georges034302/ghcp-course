@@ -1,4 +1,4 @@
-name: .NET CI
+name: .NET 8 CI
 
 on:
   push:
@@ -18,10 +18,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore session1/dotnet/ProductService.Tests/ProductService.Tests.csproj
 
       - name: Build
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build session1/dotnet/ProductService.Tests/ProductService.Tests.csproj --no-restore --configuration Release
 
       - name: Run all tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        run: dotnet test session1/dotnet/ProductService.Tests/ProductService.Tests.csproj --no-build --configuration Release --verbosity normal
