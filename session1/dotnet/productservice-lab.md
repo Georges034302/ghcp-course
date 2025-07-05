@@ -148,20 +148,30 @@ namespace ProductService.Controllers
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
-        private readonly ProductService _service = new();
+        private readonly ProductService _service;
+
+        public ProductController(ProductService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
-        public IActionResult Get() => Ok(_service.GetAll());
+        public ActionResult<IEnumerable<Product>> Get()
+        {
+            return Ok(_service.GetAll());
+        }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult<Product> Get(int id)
         {
             var product = _service.GetById(id);
-            return product is null ? NotFound() : Ok(product);
+            if (product == null)
+                return NotFound();
+            return Ok(product);
         }
 
         [HttpPost]
-        public IActionResult Post(Product product)
+        public ActionResult<Product> Post(Product product)
         {
             _service.Add(product);
             return CreatedAtAction(nameof(Get), new { id = product.Id }, product);
@@ -186,51 +196,85 @@ namespace ProductService.Controllers
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ProductService UI</title>
+    <meta charset="UTF-8">
+    <title>ProductService</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        input, button { margin: 0.2em; }
+        pre { background: #f4f4f4; padding: 1em; }
+    </style>
 </head>
 <body>
-  <h1>ProductService</h1>
-  <h2>Get All Products</h2>
-  <button onclick="getAll()">Fetch Products</button>
-  <pre id="all"></pre>
-  <h2>Get Product by ID</h2>
-  <input id="pid" placeholder="Enter ID" />
-  <button onclick="getById()">Fetch Product</button>
-  <pre id="one"></pre>
-  <h2>Add Product</h2>
-  <input id="name" placeholder="Name" />
-  <input id="price" placeholder="Price" />
-  <button onclick="addProduct()">Add</button>
-  <pre id="add"></pre>
-  <script>
-    async function getAll() {
-      const res = await fetch('/api/product');
-      document.getElementById('all').innerText = JSON.stringify(await res.json(), null, 2);
-    }
-    async function getById() {
-      const id = document.getElementById('pid').value;
-      const res = await fetch(`/api/product/${id}`);
-      document.getElementById('one').innerText = res.ok ? JSON.stringify(await res.json(), null, 2) : "Not found";
-    }
-    async function addProduct() {
-      const name = document.getElementById('name').value;
-      const price = parseFloat(document.getElementById('price').value);
-      const res = await fetch('/api/product', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: Date.now(), name, price })
-      });
-      document.getElementById('add').innerText = res.ok ? "Added!" : "Failed";
-    }
-  </script>
+    <h1>ProductService</h1>
+
+    <section>
+        <button onclick="fetchAll()">Fetch All Products</button>
+        <input type="number" id="fetchId" placeholder="Product ID">
+        <button onclick="fetchById()">Fetch By ID</button>
+    </section>
+
+    <section>
+        <h3>Add Product</h3>
+        <input type="text" id="addName" placeholder="Name">
+        <input type="number" id="addPrice" placeholder="Price" step="0.01">
+        <button onclick="addProduct()">Add</button>
+    </section>
+
+    <h3>Result:</h3>
+    <pre id="result"></pre>
+
+    <script>
+        function fetchAll() {
+            fetch('/api/product')
+                .then(res => res.json())
+                .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+                .catch(err => document.getElementById('result').textContent = err);
+        }
+
+        function fetchById() {
+            const id = document.getElementById('fetchId').value;
+            if (!id) return;
+            fetch(`/api/product/${id}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Not found');
+                    return res.json();
+                })
+                .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+                .catch(err => document.getElementById('result').textContent = err);
+        }
+
+        function addProduct() {
+            const name = document.getElementById('addName').value;
+            const price = parseFloat(document.getElementById('addPrice').value);
+            if (!name || isNaN(price)) return;
+            fetch('/api/product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: 0, name, price })
+            })
+            .then(res => res.json())
+            .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+            .catch(err => document.getElementById('result').textContent = err);
+        }
+    </script>
 </body>
 </html>
 ```
 
-**Additional:**  
-Add these lines to your `Program.cs` to serve static files:
+---
+
+## ✅ Step 4: Run and Test the API Locally
+
+> *Copilot Prompt:\
+> Update my `Program.cs` so that my ASP.NET Core app serves static files from the `wwwroot` folder, with `index.html` as the default page.  
+> Add the following middleware after building the app and before `app.Run();`:  
+> `app.UseDefaultFiles();`  
+> `app.UseStaticFiles();`  
+> `app.MapControllers();`  
+> Make sure the rest of my API and Swagger setup stays the same.*
+
 
 ```csharp
 app.UseDefaultFiles();
@@ -240,7 +284,7 @@ app.MapControllers();
 
 ---
 
-## ✅ Step 4: Run and Test the API Locally
+## ✅ Step 5: Run and Test the API Locally
 
 > *Copilot Prompt:\
 > How do I run and test my .NET 6 Web API and static HTML UI locally using the CLI?*
@@ -256,7 +300,7 @@ dotnet run
 
 ---
 
-## ✅ Step 5: Add Unit Tests with Copilot + Bogus
+## ✅ Step 6: Add Unit Tests with Copilot + Bogus
 
 ### 5.1 Create the Test Project
 
@@ -369,7 +413,7 @@ All tests should pass and output should show in the terminal.
 
 ---
 
-## ✅ Step 6: Add GitHub Actions CI for Build & Test
+## ✅ Step 7: Add GitHub Actions CI for Build & Test
 
 > *Copilot Prompt:\
 > Generate a GitHub Actions workflow YAML for building and testing my .NET 6 Web API and test project.  

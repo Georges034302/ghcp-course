@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ProductService</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        input, button { margin: 0.2em; }
+        pre { background: #f4f4f4; padding: 1em; }
+    </style>
+</head>
+<body>
+    <h1>ProductService</h1>
+
+    <section>
+        <button onclick="fetchAll()">Fetch All Products</button>
+        <input type="number" id="fetchId" placeholder="Product ID">
+        <button onclick="fetchById()">Fetch By ID</button>
+    </section>
+
+    <section>
+        <h3>Add Product</h3>
+        <input type="text" id="addName" placeholder="Name">
+        <input type="number" id="addPrice" placeholder="Price" step="0.01">
+        <button onclick="addProduct()">Add</button>
+    </section>
+
+    <h3>Result:</h3>
+    <pre id="result"></pre>
+
+    <script>
+        function fetchAll() {
+            fetch('/api/product')
+                .then(res => res.json())
+                .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+                .catch(err => document.getElementById('result').textContent = err);
+        }
+
+        function fetchById() {
+            const id = document.getElementById('fetchId').value;
+            if (!id) return;
+            fetch(`/api/product/${id}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Not found');
+                    return res.json();
+                })
+                .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+                .catch(err => document.getElementById('result').textContent = err);
+        }
+
+        function addProduct() {
+            const name = document.getElementById('addName').value;
+            const price = parseFloat(document.getElementById('addPrice').value);
+            if (!name || isNaN(price)) return;
+            fetch('/api/product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: 0, name, price })
+            })
+            .then(res => res.json())
+            .then(data => document.getElementById('result').textContent = JSON.stringify(data, null, 2))
+            .catch(err => document.getElementById('result').textContent = err);
+        }
+    </script>
+</body>
+</html>
