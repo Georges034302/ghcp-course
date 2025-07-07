@@ -84,15 +84,73 @@ The instructor demonstrates how Copilot can serve as a real-time assistant to wr
 <details>
 <summary><strong>Session 2 – Lab</strong> (click to expand/hide)</summary>
 
-_🚧 This section is under construction. Lab instructions will be added soon._
+### 🧪 Hands-On Lab: Secure and Document a .NET API Using Copilot + GitHub Security Tools
+
+#### 🏷️ Lab Title
+Secure and Document a .NET 8 Web API (`UserApp`) with GitHub Copilot, CodeQL, and Docs Enforcement
+
+#### 🎯 Lab Objective
+Refactor a vulnerable .NET Web API using GitHub Copilot Chat, remove SQL injection and hardcoded secrets, add documentation, and use GitHub Actions and Advanced Security to enforce best practices.
+
+#### ✅ Lab Scenario
+A .NET developer inherits an insecure codebase. Using GitHub Copilot, they clean the logic, apply validation, inject secrets securely, and auto-generate XML + markdown docs. GitHub Actions and CodeQL enforce CI and doc checks.
+
+### 🔧 Lab Steps Overview
+
+| Step | Description                                           |
+|------|-------------------------------------------------------|
+| 1    | Scaffold .NET Web API using `dotnet new webapi`       |
+| 2    | Add an insecure controller method                     |
+| 3    | Refactor using Copilot prompts and config secrets     |
+| 4    | Generate XML comments with `///` and Copilot Chat     |
+| 5    | Generate markdown files with Copilot                  |
+| 6    | Enable Secret Scanning + Push Protection              |
+| 7    | Add CodeQL analysis via GitHub Actions                |
+| 8    | Add markdownlint GitHub Action                        |
+| 9    | Add CI GitHub Action (build + test)                   |
+| 10   | Add Dependabot to manage NuGet package security       |
+
+| Expected Outcome | Description                                                   |
+|------------------|---------------------------------------------------------------|
+| 1                | Insecure logic is cleaned and secured                         |
+| 2                | XML comments are auto-generated                               |
+| 3                | README.md, CONTRIBUTING.md, CHANGELOG.md created              |
+| 4                | GitHub Actions enforce CI, docs, and secure coding practices  |
+| 5                | Copilot Chat accelerates developer workflow                   |
 
 </details>
 
-
 <details>
-<summary><strong>Session 2 –Demo</strong> (click to expand/hide)</summary>
+<summary><strong>Session 2 – Demo</strong> (click to expand/hide)</summary>
 
-_🚧 This section is under construction. Demo instructions will be added soon._
+### 🚀 Instructor Demo: Java Spring Boot UserApp – Secure API with Copilot + CodeQL
+
+#### 🏷️ Demo Title
+Fix SQL Injection + Add Documentation in Spring Boot with GitHub Copilot and GitHub Advanced Security
+
+#### 🎯 Demo Objective
+Refactor a vulnerable Java Spring Boot endpoint with Copilot, validate with CodeQL, add documentation using Javadoc and markdown files, and enforce via GitHub Actions.
+
+#### ✅ Demo Scenario
+A legacy Java controller contains SQL injection and hardcoded secrets. The instructor walks through identifying and remediating these with Copilot prompts, then integrates documentation and CI security workflows.
+
+### 🔧 Demo Steps Overview
+
+| Phase           | Description                                                      |
+|------------------|------------------------------------------------------------------|
+| Create Vulnerable| Endpoint with string concatenation and hardcoded token          |
+| Refactor         | Use Copilot Chat to replace with PreparedStatement and @Value   |
+| Validate         | Enable CodeQL and secret scanning                               |
+| Document         | Generate Javadoc and markdown docs using Copilot prompts        |
+| CI Enforcement   | Add GitHub Actions for code + doc checks                        |
+
+| Expected Outcome | Description                                                    |
+|------------------|-----------------------------------------------------------------|
+| 1                | SQL injection is mitigated and secret moved to config          |
+| 2                | CodeQL passes with no security alerts                          |
+| 3                | Javadoc + markdown docs auto-generated                         |
+| 4                | CI workflows enforce secure + documented codebase              |
+| 5                | Instructor demonstrates secure DevOps pipeline with Copilot    |
 
 </details>
 
