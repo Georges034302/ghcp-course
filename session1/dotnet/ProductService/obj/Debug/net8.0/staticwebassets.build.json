@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "ICP9YlkvrcKMHkplj4Kka7LNSoxxOGi2U/pTys/r8tA=",
+  "Source": "ProductService",
+  "BasePath": "_content/ProductService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ProductService/wwwroot",
+      "Source": "ProductService",
+      "ContentRoot": "/workspaces/ghcp-course/session1/dotnet/ProductService/wwwroot/",
+      "BasePath": "_content/ProductService",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/workspaces/ghcp-course/session1/dotnet/ProductService/wwwroot/index.html",
+      "SourceId": "ProductService",
+      "SourceType": "Discovered",
+      "ContentRoot": "/workspaces/ghcp-course/session1/dotnet/ProductService/wwwroot/",
+      "BasePath": "_content/ProductService",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/index.html"
+    }
+  ]
+}

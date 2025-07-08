@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ProductService</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        input, button { margin: 0.2em; }
+        pre { background: #f4f4f4; padding: 1em; }
+    </style>
+</head>
+<body>
+    <h1>ProductService</h1>
+
+    <section>
+        <h2>Fetch All Products</h2>
+        <button onclick="fetchAll()">Get All</button>
+        <pre id="all"></pre>
+    </section>
+
+    <section>
+        <h2>Fetch Product By ID</h2>
+        <input type="number" id="fetchId" placeholder="Product ID">
+        <button onclick="fetchById()">Get By ID</button>
+        <pre id="byid"></pre>
+    </section>
+
+    <section>
+        <h2>Add Product</h2>
+        <input type="text" id="addName" placeholder="Name">
+        <input type="number" id="addPrice" placeholder="Price" step="0.01">
+        <button onclick="addProduct()">Add</button>
+        <pre id="addresult"></pre>
+    </section>
+
+    <script>
+        function fetchAll() {
+            fetch('/api/product')
+                .then(r => r.json())
+                .then(data => document.getElementById('all').textContent = JSON.stringify(data, null, 2))
+                .catch(e => document.getElementById('all').textContent = e);
+        }
+
+        function fetchById() {
+            const id = document.getElementById('fetchId').value;
+            fetch('/api/product/' + id)
+                .then(r => r.ok ? r.json() : Promise.reject('Not found'))
+                .then(data => document.getElementById('byid').textContent = JSON.stringify(data, null, 2))
+                .catch(e => document.getElementById('byid').textContent = e);
+        }
+
+        function addProduct() {
+            const name = document.getElementById('addName').value;
+            const price = parseFloat(document.getElementById('addPrice').value);
+            fetch('/api/product', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: 0, name, price })
+            })
+            .then(r => r.json())
+            .then(data => document.getElementById('addresult').textContent = JSON.stringify(data, null, 2))
+            .catch(e => document.getElementById('addresult').textContent = e);
+        }
+    </script>
