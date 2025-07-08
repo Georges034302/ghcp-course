@@ -335,18 +335,18 @@ jobs:
 
 ## 🚢 Step 9: Generate cd.yml for Azure Deployment
 
-> Prompt:
-> Provide CLi to create `.github/workflows/cd.yml` in github root repo
-> Provide GitHub Actions YAML workflow `cd.yml` with the following specifications:
-> triggers on push events to the `main` branch
-> Run on the latest Ubuntu environment
-> Login to Azure using `azure/login@v1` with the secret `AZURE_CREDENTIALS`
-> Checkout the repository using `actions/checkout@v3`
-> Setup Java JDK 21 with Eclipse Temurin using `actions/setup-java@v3`
-> Build the project with Maven using `mvn clean package`
-> Deploy the built JAR file located in `target/*.jar` to Azure Web App using `azure/webapps-deploy@v2`
-> Use the secret `AZURE_WEBAPP_PUBLISH_PROFILE` for deployment authentication
-> Use the secret `APP_NAME` to specify the `app-name` parameter for deployment
+> Prompt:\
+> Provide CLi to create `.github/workflows/cd.yml` in github root repo\
+> Provide GitHub Actions YAML workflow `cd.yml` with the following specifications:\
+> triggers on push events to the `main` branch\
+> Run on the latest Ubuntu environment\
+> Login to Azure using `azure/login@v1` with the secret `AZURE_CREDENTIALS`\
+> Checkout the repository using `actions/checkout@v3`\
+> Setup Java JDK 21 with Eclipse Temurin using `actions/setup-java@v3`\
+> Build the project with Maven using `mvn clean package`\
+> Deploy the built JAR file located in `target/*.jar` to Azure Web App using `azure/webapps-deploy@v2`\
+> Use the secret `AZURE_WEBAPP_PUBLISH_PROFILE` for deployment authentication\
+> Use the secret `APP_NAME` to specify the `app-name` parameter for deployment\
 > Format the output as a valid YAML file
 
 
