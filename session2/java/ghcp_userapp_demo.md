@@ -288,13 +288,13 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Build with Maven
-        run: mvn clean install
-        working-directory: session2/java/UserApp
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java
+      - name: Build with Maven
+        run: mvn clean install
+        working-directory: session2/java/UserApp
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 ```
