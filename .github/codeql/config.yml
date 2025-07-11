@@ -12,6 +12,8 @@ on:
 
 permissions:
   security-events: write
+  actions: read
+  contents: read
 
 jobs:
   analyze:
@@ -26,24 +28,22 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'maven'
+          cache: maven
+
+      # Enable debug logging for CodeQL
+      - name: Enable CodeQL Debug
+        run: echo "CODEQL_EXTRACTOR_JAVA_ROOT_CAUSE_ANALYSIS=true" >> $GITHUB_ENV
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          config-file: .github/codeql/config.yml
 
-      # Autobuild attempts to build any compiled languages
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      # ℹ️ Command-line programs to run using the OS shell.
-      - name: Build with Maven (if autobuild fails)
-        if: ${{ failure() }}
+      # Explicitly compile before analysis
+      - name: Build with Maven
         run: |
           cd session2/java/UserApp
-          mvn clean package
-
+          mvn -B clean compile
+        
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

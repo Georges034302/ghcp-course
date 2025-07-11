@@ -353,7 +353,7 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 > ✅ Expected Output:
 
 
-✅ **Expected Output (File Tree):**
+✅ **Expected Output:**
 
 ```bash
 mkdir -p .github/codeql/queries
