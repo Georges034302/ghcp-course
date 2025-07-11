@@ -343,7 +343,17 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 ### 📁 Create the Folder Structure
 
 > **Prompt:** \
-> "Create a directory named `security/queries` and place the custom CodeQL query file inside it."
+> Create the `session2/java/security` directory, create the following structure for a custom CodeQL rule:
+> - `qlpack.yml` 
+> - `queries/FindHardcodedSecrets.ql` 
+
+✅ **Expected Output (File Tree):**
+
+```bash
+mkdir -p session2/java/security/queries
+touch session2/java/security/qlpack.yaml
+touch session2/java/security/queries/FindHardcodedSecrets.ql
+```
 
 > ✅ **Expected Output:**
 
@@ -356,7 +366,7 @@ security/
 
 ### ✨ Create `FindHardcodedSecrets.ql`
 > **Prompt:** \
-> "Write a CodeQL query to detect hardcoded API keys or secrets in Java. 
+> Write a CodeQL query to detect hardcoded API keys or secrets in Java. 
 > Match string literals that include the words `apiKey`, `token`, `secret`, or `password`."
 
 > ✅ **Expected Output:**
@@ -388,7 +398,7 @@ select literal, "Potential hardcoded secret found: " + literal.getValue()
 Register the custom query pack and declare its dependency on the Java CodeQL libraries.
 
 > **Prompt:** \
-> Create a qlpack.yml file that defines the CodeQL query pack for Java using the security/queries folder.
+> Create a `qlpack.yml` for a CodeQL query pack named `userapp/find-secrets` (version 0.0.1) that depends on `codeql/java-all` and sets the default suite to run all
 
 > ✅ **Expected Output:**
 
@@ -403,7 +413,7 @@ defaultSuite:
 
 ### 🔗 Integrate Custom Query in CodeQL Workflow
 > **Prompt:** \
-> Update the codeql.yaml workflow to include a custom query folder located at ./security for Java scanning.
+> Update the codeql.yaml workflow to include a custom query folder located at .session2/java/security for Java scanning.
 
 > ✅ **Expected Output:**
 
