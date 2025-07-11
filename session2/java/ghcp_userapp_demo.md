@@ -176,23 +176,28 @@ public ResponseEntity<String> getUser(@RequestParam String email) throws SQLExce
 > ✅ **Expected Output (`.github/workflows/user-ci.yml`):**
 ```yaml
 name: Java CI
+
 on:
   push:
+    paths:
+      - 'session2/java/**'
     branches: [main]
-  pull_request:
-    branches: [main]
+
 jobs:
   build:
+    name: Build and Test User App
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package
+        working-directory: session2/java/UserApp
 ```
 
 ---
@@ -213,20 +218,41 @@ jobs:
 > ✅ **Expected Output (`.github/workflows/codeql.yml`):**
 ```yaml
 name: CodeQL
+
 on:
   push:
+    paths:
+      - 'session2/java/**'
     branches: [main]
   pull_request:
+    paths:
+      - 'session2/java/**'
     branches: [main]
+
+permissions:
+  security-events: write
+
 jobs:
   analyze:
+    name: CodeQL Analyze Java
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: github/codeql-action/init@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn clean install
+        working-directory: session2/java/UserApp
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
           languages: java
-      - uses: github/codeql-action/analyze@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
 ```
 
 ---

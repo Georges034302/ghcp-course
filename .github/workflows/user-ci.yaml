@@ -20,4 +20,4 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn clean package
-        working-directory: session2/java/PlayerApp
+        working-directory: session2/java/UserApp
