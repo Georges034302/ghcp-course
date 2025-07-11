@@ -32,6 +32,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          queries: codeql-packs/java/userapp-secrets/queries
+          packs: userapp/secrets
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
