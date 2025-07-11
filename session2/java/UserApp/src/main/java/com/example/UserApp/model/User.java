@@ -12,6 +12,7 @@ public class User {
     private Long id;
     private String email;
     private String name;
+    private static final String API_KEY = "sk_test_abc123"; // Example API key, replace with your actual key
 
     public User() {}
 

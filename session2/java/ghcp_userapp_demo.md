@@ -337,39 +337,129 @@ updates:
 
 ---
 
-## 🧩 Summary Table
+## Step ✅ 13: Create a Custom CodeQL Query to Detect Hardcoded Secrets
+Build and use a custom CodeQL query in a Java project to detect hardcoded secrets using GitHub Copilot and Actions.
 
-| Layer         | Status     |
-|---------------|------------|
-| Model         | ✅ Created |
-| Repository    | ✅ Created |
-| Service       | ✅ Created |
-| Controller    | ✅ Created |
-| Properties    | ✅ Configured |
-| CI Workflow   | ✅ Added |
-| CodeQL        | ✅ Enabled |
-| Secret Scanning | ✅ Enabled |
-| Documentation | ✅ Generated |
-| Architecture  | ✅ Verified |
+### 📁 Create the Folder Structure
 
-# 🔍 CodeQL Workflow Capability Comparison: GitHub Pro vs GitHub Enterprise
+> **Prompt:** \
+> "Create a directory named `security/queries` and place the custom CodeQL query file inside it."
+
+> ✅ **Expected Output:**
+
+```
+security/
+├── qlpack.yml
+└── queries/
+└── FindHardcodedSecrets.ql
+```
+
+### ✨ Create `FindHardcodedSecrets.ql`
+> **Prompt:** \
+> "Write a CodeQL query to detect hardcoded API keys or secrets in Java. 
+> Match string literals that include the words `apiKey`, `token`, `secret`, or `password`."
+
+> ✅ **Expected Output:**
+
+```ql
+/**
+ * @name Hardcoded secret string
+ * @description Flags string literals that look like API keys, tokens, or secrets.
+ * @kind problem
+ * @problem.severity warning
+ * @tags security
+ */
+
+import java
+import semmle.code.java.dataflow.FlowSources
+import semmle.code.java.dataflow.TaintTracking
+
+class SuspiciousStringLiteral extends StringLiteral {
+  SuspiciousStringLiteral() {
+    this.getValue().regexpMatch("(?i)(api[_-]?key|token|secret|password).*")
+  }
+}
+
+from SuspiciousStringLiteral literal
+select literal, "Potential hardcoded secret found: " + literal.getValue()
+```
+
+### ✨ Create qlpack.yml File
+Register the custom query pack and declare its dependency on the Java CodeQL libraries.
+
+> **Prompt:** \
+> Create a qlpack.yml file that defines the CodeQL query pack for Java using the security/queries folder.
+
+> ✅ **Expected Output:**
+
+```yaml
+name: userapp/find-secrets
+version: 0.0.1
+dependencies:
+  codeql/java-all: "*"
+defaultSuite:
+  - query: queries/
+```
+
+### 🔗 Integrate Custom Query in CodeQL Workflow
+> **Prompt:** \
+> Update the codeql.yaml workflow to include a custom query folder located at ./security for Java scanning.
+
+> ✅ **Expected Output:**
+
+```yaml
+- name: Initialize CodeQL
+  uses: github/codeql-action/init@v3
+  with:
+    languages: java
+    queries: ./security
+```
+
+### 📝 Add Test Case for Secret Detection
+
+```java
+package com.example.UserApp.model;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String email;
+  private String name;
+  private static final String API_KEY = "sk_test_abc123"; // Example API key
+
+  // getters/setters...
+}
+
+```
+
+### 🚦 Push the change and trigger the workflow
+
+Push this test file and monitor GitHub Actions CodeQL workflow logs for detected secrets
+
+> ✅ **Expected Output:**
+
+```yaml
+Potential hardcoded secret found: sk_test_abc123
+```
+
+> 🧠 NOTE: \
+> To see results in the Security tab, GitHub Enterprise (GHAS) is required. \
+> On GitHub Pro, review results from the CI logs only.
+---
+
+## 🔍 CodeQL Workflow Capability Comparison: GitHub Pro vs GitHub Enterprise
 
 This table compares the capabilities and effects of the provided CodeQL GitHub Actions workflow when executed under **GitHub Pro** and **GitHub Enterprise (GHAS)** subscriptions.
+| Capability                                            | **GitHub Pro (Public Repo)** | **GitHub Pro (Private Repo)** | **GitHub Enterprise (GHAS)** |
+| ----------------------------------------------------- | ---------------------------- | ----------------------------- | ---------------------------- |
+| **Run CodeQL via GitHub Actions**                     | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
+| **Use Custom CodeQL Queries** (local repo queries)    | ✅ Yes (CI log only)          | ✅ Yes (CI log only)           | ✅ Yes (CI + Security tab)    |
+| **Upload results to Security tab (Code Scanning UI)** | ✅ Yes (built-in only)        | ❌ No                          | ✅ Yes (custom + built-in)    |
+| **Secret Scanning (automatic)**                       | ✅ Yes                        | ❌ No                          | ✅ Yes                        |
+| **Push Protection for secrets**                       | ✅ Yes                        | ❌ No                          | ✅ Yes                        |
+| **Dependabot Alerts**                                 | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
+| **Dependabot Security Updates**                       | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
+| **Policy enforcement / org-wide query management**    | ❌ No                         | ❌ No                          | ✅ Yes                        |
+| **Security Graph API Access (full)**                  | ❌ Limited                    | ❌ Limited                     | ✅ Yes                        |
 
-| Capability                                      | GitHub Pro (Public Repo) | GitHub Enterprise (GHAS)         |
-|------------------------------------------------|---------------------------|----------------------------------|
-| ✅ Workflow Execution Support                   | ✅ Yes                    | ✅ Yes                           |
-| 🔒 Private Repo Support                         | ❌ No                     | ✅ Yes                           |
-| 🚀 CodeQL Analysis Engine (v3)                  | ✅ Yes                    | ✅ Yes                           |
-| 📦 Code Scanning Alerts in Security Tab        | ✅ Yes                    | ✅ Yes                           |
-| 🔐 Upload security findings (`security-events`) | ✅ Yes                    | ✅ Yes                           |
-| 🔎 Custom CodeQL Queries                        | ❌ No                     | ✅ Yes                           |
-| 🧩 Central Policy Enforcement (org-wide rules)  | ❌ No                     | ✅ Yes                           |
-| 🛡️ Push Protection with CodeQL integration     | ❌ No                     | ✅ Yes                           |
-| 📊 GitHub Security Graph API Access             | ❌ Limited                | ✅ Full                          |
-| 📁 Organization-wide scan management            | ❌ No                     | ✅ Yes                           |
-| 🛠️ SARIF Integration for 3rd-party tools       | ✅ (manual)               | ✅ (full support)                |
-| 📅 Schedule-based or PR-based scan triggers     | ✅ Yes (basic)            | ✅ Yes (with enforcement options)|
-| 📓 Custom query packs from repo or org          | ❌ No                     | ✅ Yes                           |
-| 🔧 Fine-grained alert suppression / triage      | ❌ No                     | ✅ Yes                           |
 
