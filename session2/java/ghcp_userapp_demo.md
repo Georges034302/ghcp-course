@@ -1,85 +1,122 @@
-# 🚀 GHCP Session 2 Instructor Demo – UserApp with Copilot, CodeQL & GitHub Security
 
-## 🧱 Overview
+# 🚀 GHCP Instructor Demo – `UserApp` with GitHub Copilot, CodeQL & GitHub Security
 
-| Component     | Description                                                     |
-| ------------- | --------------------------------------------------------------- |
-| App           | Spring Boot REST API (`UserApp`)                                |
-| Insecure Code | Vulnerable endpoint with SQL injection and hardcoded secret     |
-| Security Fix  | Copilot-aided refactor with validation and config-based secrets |
-| Docs          | Copilot-generated Javadoc + `README.md` + `CONTRIBUTING.md`     |
-| CI            | GitHub Actions:                                                 |
-
-| **build + test + CodeQL + doc check** |                                                             |
-| ------------------------------------- | ----------------------------------------------------------- |
-| Security                              | Secret Scanning + Push Protection + Dependabot              |
-| Tools                                 | IntelliJ or VS Code, GitHub Copilot, GitHub Actions, CodeQL |
+This demo guides instructors through building a secure, layered Spring Boot application (`UserApp`) using GitHub Copilot and GitHub Security tools. It includes model, repository, service, and controller components with security scans and CI/CD integration.
 
 ---
 
-## ✅ Step 1: Scaffold Spring Boot Project
+## ✅ Step 1: Scaffold the Spring Boot Project
 
-### ⚒️ Option A: Use Spring Initializr
+> **Prompt:**  
+> “Use Spring Initializr to generate a Maven-based Spring Boot project named `UserApp` with:
+> - Java 21
+> - Dependencies: Spring Web, Spring Data JPA, H2 Database
+> - Output as a ZIP
+> - Unzip it into `/workspaces/ghcp-course/session2/java/UserApp`, then delete the ZIP.”
 
 ```bash
-cd /workspaces/ghcp-course/session2/java
-mkdir UserApp
-cd UserApp && curl https://start.spring.io/starter.zip \
-  -d dependencies=web \
+cd /workspaces/ghcp-course/session2/java/UserApp
+curl https://start.spring.io/starter.zip \
+  -d dependencies=web,data-jpa,h2 \
   -d name=UserApp \
   -d artifactId=UserApp \
   -d type=maven-project \
   -d language=java \
   -d javaVersion=21 \
   -o UserApp.zip
-unzip UserApp.zip && rm UserApp.zip
+unzip UserApp.zip
+rm UserApp.zip
 ```
 
-Run the app:
+> ✅ **Expected Output:**
+> ```
+> UserApp/
+> ├── src/
+> │   ├── main/
+> │   │   ├── java/com/example/UserApp/
+> │   │   └── resources/
+> │   └── test/
+> ├── pom.xml
+> └── mvnw, mvnw.cmd
+> ```
 
-```bash
-./mvnw spring-boot:run
+---
+
+## ✅ Step 2: Define the Clean Architecture
+
+> **Prompt:**  
+> “Generate a standard Spring Boot architecture for a REST API named `UserApp` that includes:
+> - Model: `User` entity with `email` and `name`
+> - Repository: `UserRepository` extends `JpaRepository`
+> - Service: `UserService` with method `getUserByEmail()`
+> - Controller: `UserController` that maps to `/api/user` and returns user info by email”
+> - Use touch to create the java classes (own display block)
+> - Provide the java classes code
+
+
+> ✅ **Expected Output:**
+> ```
+> com.example.UserApp
+> ├── controller/UserController.java
+> ├── service/UserService.java
+> ├── model/User.java
+> └── repository/UserRepository.java
+> ```
+
+---
+
+## ✅ Step 3: Add Configuration
+
+> **Prompt:**  
+> “Create `application.properties` with:
+> - `app.api.key`
+> - H2 DB connection settings
+> - Hibernate config for auto schema generation”
+
+> ✅ **Expected Output (`src/main/resources/application.properties`):**
+```properties
+app.api.key=sk_configured_123
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create
+spring.h2.console.enabled=true
 ```
 
 ---
 
-## 📁 Step 2: Create Vulnerable Endpoint
+## ✅ Step 4: Demonstrate Insecure Version (Before Copilot Fix)
 
-### 📄 UserController.java (injection + secret)
+> **Prompt:**  
+> “Create an insecure version of `UserController`:
+> - Use `Statement` and string concatenation for SQL query
+> - Hardcode secret in the class”
 
-> *Prompt:* Create a controller with `/api/user` endpoint that uses a SQL query with string concatenation and a hardcoded API key in the class.
-
-#### ✅ Expected Outcome:
-
+> ✅ **Expected Output (simplified vulnerable controller):**
 ```java
-@RestController
-@RequestMapping("/api")
-public class UserController {
+private static final String API_KEY = "sk_test_123";
 
-    private static final String API_KEY = "sk_test_hardcoded123";
-
-    @GetMapping("/user")
-    public ResponseEntity<String> getUser(@RequestParam String email) throws SQLException {
-        Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa", "");
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE email = '" + email + "'");
-        return rs.next() ? ResponseEntity.ok("User Found") : ResponseEntity.notFound().build();
-    }
+@GetMapping("/user")
+public ResponseEntity<String> getUser(@RequestParam String email) throws SQLException {
+    Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa", "");
+    Statement stmt = conn.createStatement();
+    ResultSet rs = stmt.executeQuery("SELECT * FROM users WHERE email = '" + email + "'");
+    return rs.next() ? ResponseEntity.ok("User Found") : ResponseEntity.notFound().build();
 }
 ```
 
 ---
 
-## 🤖 Step 3: Refactor Insecure Code with Copilot
+## ✅ Step 5: Refactor Using GitHub Copilot
 
-### 🧑‍💻 Prompt to Copilot Chat:
+> **Prompt:**  
+> “Is this vulnerable to SQL injection?”  
+> “Refactor to use `PreparedStatement`.”  
+> “Inject API key using `@Value` from config.”
 
-- “Is this code vulnerable to SQL injection?”
-- “Refactor to use prepared statement”
-- “Move API key to application.properties and inject securely”
-
-#### ✅ Copilot Refactored Version:
-
+> ✅ **Expected Output:**
 ```java
 @Value("${app.api.key}")
 private String apiKey;
@@ -94,119 +131,49 @@ public ResponseEntity<String> getUser(@RequestParam String email) throws SQLExce
 }
 ```
 
-### 📓 application.properties
-
-```
-app.api.key=sk_configured_123
-```
-
 ---
 
-## 🕊️ Step 4: Add Javadoc with Copilot
+## ✅ Step 6: Generate Documentation with Copilot
 
-> *Prompt:* Place cursor above method and type `/**`, then ask: “Explain the return value and edge cases”
+> **Prompt:**  
+> Generate Javadoc for `UserController` methods:
+> - Describe the parameters, return types, and exceptions.
 
-#### ✅ Expected Outcome:
-
+> ✅ **Expected Output:**
 ```java
 /**
  * Retrieves a user by email.
- * @param email The user email to query.
- * @return 200 OK if user found, 404 if not found.
- * @throws SQLException if database access fails.
+ * @param email The email address to search for.
+ * @return 200 OK with user info if found, otherwise 404.
+ * @throws SQLException if the DB connection fails.
  */
 ```
 
 ---
 
-## 📜 Step 5: Generate Markdown Docs with Copilot
+## ✅ Step 7: Create INSTRUCTIONS.md and CONTRIBUTING.md
 
-### 📄 README.md
+> **Prompt 1 (INSTRUCTIONS.md):**  
+> Create new `INSTRUCTIONS.md` in the UserApp directory \
+> Provide instructions on setup, how to run, API endpoints, and technologies
 
-> *Prompt:* “Generate a README with usage and setup steps”
 
-### 📄 CONTRIBUTING.md
-
-> *Prompt:* “Write contribution setup instructions for this Spring Boot project”
-
-### 📄 CHANGELOG.md
-
-> *Prompt:* “Create a changelog for version 1.0.0”
+> **Prompt 2 (CONTRIBUTING.md):** \
+> Create new `CONTRIBUTING.md` in the UserApp directory \
+> Provide a guide for this Spring Boot app using Maven.
 
 ---
 
-## ✅ Step 6: Add GitHub Security Tools
+## ✅ Step 8: Add GitHub Actions CI/CD
 
-### ⚠️ Enable Secret Scanning & Push Protection
+> **Prompt:**  
+> Create the file user-ci.yaml in github root direction .github/workflows
+> Generate GitHub Actions workflow  for:
+> - Java 21
+> - `mvn clean install` on push and pull request”
+> - Workflow triggers on changes in session2/java
 
-- Go to **Settings > Code security and analysis**
-- Enable:
-  -
-
-### 🚀 Enable CodeQL via GitHub Actions
-
-> *Prompt:* "Create GitHub Action to run CodeQL on pull request"
-
-### .github/workflows/codeql.yml
-
-```yaml
-name: CodeQL
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-jobs:
-  analyze:
-    name: Analyze Code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
-        with:
-          languages: java
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
-```
-
-### 🚀 Add Markdown + Docs Check
-
-> *Prompt:* "Create GitHub Action to lint markdown and check doc presence"
-
-### .github/workflows/docs-check.yml
-
-```yaml
-name: Docs Check
-on:
-  pull_request:
-    branches: [main]
-jobs:
-  markdownlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: DavidAnson/markdownlint-cli2-action@v10
-```
-
-### 🚀 Add Dependabot
-
-```yaml
-# .github/dependabot.yml
-version: 2
-updates:
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "daily"
-```
-
----
-
-## 🔧 Step 7: CI Workflow with Build + Test
-
-### .github/workflows/ci.yml
-
+> ✅ **Expected Output (`.github/workflows/user-ci.yml`):**
 ```yaml
 name: Java CI
 on:
@@ -230,13 +197,82 @@ jobs:
 
 ---
 
-## 👌 Summary
+## ✅ Step 9: Add CodeQL Scan
 
-| Task                | Outcome / Tool                                       |
-| ------------------- | ---------------------------------------------------- |
-| Vulnerability Fixed | Copilot Chat: SQL injection + secret injection fix   |
-| Docs Added          | Javadoc, README.md, CONTRIBUTING.md                  |
-| Security Tools      | CodeQL, Secret Scanning, Push Protection, Dependabot |
-| CI/CD               | GitHub Actions: build + test + docs + CodeQL         |
-| Style Check         | markdownlint in GitHub Actions                       |
+> **Prompt:** 
+> Create the file codeql.yaml in github root direction .github/workflows
+> Generate GitHub Actions workflow  for to run CodeQL for Java on PRs and pushes.”
+> Workflow triggers on changes in session2/java 
 
+
+> ✅ **Expected Output (`.github/workflows/codeql.yml`):**
+```yaml
+name: CodeQL
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: github/codeql-action/init@v2
+        with:
+          languages: java
+      - uses: github/codeql-action/analyze@v2
+```
+
+---
+
+## ✅ Step 10: Enable Secret Scanning and Push Protection
+
+
+### ⚙️ Enable security features in GitHub:
+
+1. Go to your repository on GitHub.
+2. Click on **Settings** (top right of the repo page).
+3. In the left sidebar, click **Code security**.
+4. Enable the following options:
+   - **Secret scanning** 🕵️‍♂️
+   - **Push protection** 🚦
+   - **Dependency graph** 📊
+5. Click **Save** 💾 if
+
+These steps will enable secret scanning, push protection, and the dependency graph for
+
+---
+
+## ✅ Step 11: Add Dependabot
+> **Prompt:**
+> Create the file `.github/dependabot.yml`  
+> Add a configuration to enable daily updates for Maven dependencies in the root directory  
+
+
+> ✅ **Expected Output (`.github/dependabot.yml`):**
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "daily"
+```
+
+---
+
+## 🧩 Summary Table
+
+| Layer         | Status     |
+|---------------|------------|
+| Model         | ✅ Created |
+| Repository    | ✅ Created |
+| Service       | ✅ Created |
+| Controller    | ✅ Created |
+| Properties    | ✅ Configured |
+| CI Workflow   | ✅ Added |
+| CodeQL        | ✅ Enabled |
+| Secret Scanning | ✅ Enabled |
+| Documentation | ✅ Generated |
+| Architecture  | ✅ Verified |
