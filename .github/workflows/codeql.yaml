@@ -32,6 +32,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          queries: .github/codeql/queries
+          config-file: .github/codeql/config.yml
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

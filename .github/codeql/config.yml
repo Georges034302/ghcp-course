@@ -1,0 +1,13 @@
+name: "CodeQL Config"
+
+queries:
+  - uses: security-and-quality
+
+paths:
+  - session2/java
+paths-ignore:
+  - '**/test/**'
+  - '**/generated/**'
+
+database:
+  analyze-builtin-queries: true
