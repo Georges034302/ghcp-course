@@ -357,7 +357,7 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 
 ```bash
 mkdir -p .github/codeql/queries
-touch .github/codeql/querie/qlpack.yml
+touch .github/codeql/queries/qlpack.yml
 touch .github/codeql/queries/FindHardcodedSecrets.ql
 ```
 
