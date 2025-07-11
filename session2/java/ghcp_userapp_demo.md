@@ -431,7 +431,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    packs: ./codeql-packs/java/userapp-secrets
+    queries: codeql-packs/java/userapp-secrets/queries
 
 ### 📝 Add Test Case for Secret Detection
 
