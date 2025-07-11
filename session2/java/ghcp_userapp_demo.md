@@ -457,6 +457,153 @@ Potential hardcoded secret found: sk_test_abc123
 > On GitHub Pro, review results from the CI logs only.
 ---
 
+## ✅ Step 14: Enforce Org-Wide CodeQL Policy *(Enterprise Only)*
+
+> **Prompt:**  
+> Inside your organization’s `.github` repository (e.g. `github.com/your-org/.github`), create a file named `.github/codeql/org-policy.yml`.  
+> Define a policy to enforce a custom CodeQL query (`FindHardcodedSecrets.ql`) across all Java repositories.  
+> The policy should:
+> - Include the query pack from a central location
+> - Target Java projects
+> - Block PRs that violate the rule
+
+> ✅ **Expected Output (`.github/codeql/org-policy.yml`):**
+```yaml
+queries:
+  - uses: your-org/codeql-query-pack/FindHardcodedSecrets.ql
+languages:
+  - java
+enforce:
+  block_on_violation: true
+```
+
+> ✅ **Expected Output (`FindHardcodedSecrets.ql`):**
+```ql
+/**
+ * @name Hardcoded secret string
+ * @description Detects suspicious string literals that may contain API keys, secrets, or tokens.
+ * @kind problem
+ * @problem.severity warning
+ * @tags security
+ */
+
+import java
+
+class SuspiciousSecret extends StringLiteral {
+  SuspiciousSecret() {
+    this.getValue().regexpMatch("(?i)(api[_-]?key|token|secret|password).*")
+  }
+}
+
+from SuspiciousSecret s
+select s, "Potential hardcoded secret found: " + s.getValue()
+```
+
+> ✅ **Expected Output (`qlpack.yml`):**
+```yaml
+name: your-org/codeql-query-pack
+version: 0.0.1
+dependencies:
+  codeql/java-all: "*"
+defaultSuite:
+  - query: queries/
+```
+
+---
+
+## ✅ Step 15: Use GitHub Security Graph API *(Enterprise Only)*
+
+> **Prompt:**  
+> Use GitHub’s Security GraphQL API to retrieve open vulnerability alerts from the `UserApp` repository.  
+> Include:  
+> - `vulnerableManifestFilename`  
+> - Package name  
+> - Severity  
+> - Advisory description
+
+> ✅ **Expected Output (GraphQL Query):**
+```graphql
+query {
+  repository(owner: "your-org", name: "UserApp") {
+    vulnerabilityAlerts(first: 10) {
+      nodes {
+        vulnerableManifestFilename
+        securityVulnerability {
+          package { name }
+          severity
+          advisory {
+            description
+            identifiers { type value }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+---
+
+## 🔍 Query GitHub Security Alerts via GraphQL (query Step 15) *(Enterprise Only)*
+
+You can retrieve vulnerability alerts (e.g. from CodeQL, Dependabot) using GitHub’s GraphQL API in two main ways:
+
+### ✅ OptionA: Use GitHub GraphQL Explorer (Manual)
+
+1. Open: [GitHub GraphQL Explorer](https://docs.github.com/en/graphql/overview/explorer)
+2. Sign in with an account that has access to the repository
+3. Paste and run the following query:
+
+```graphql
+query {
+  repository(owner: "your-org", name: "UserApp") {
+    vulnerabilityAlerts(first: 10) {
+      nodes {
+        vulnerableManifestFilename
+        securityVulnerability {
+          package { name }
+          severity
+          advisory {
+            description
+            identifiers { type value }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+> ⚠️ Replace `"your-org"` and `"UserApp"` with your actual organization and repository names.  
+> 🔐 Ensure your GitHub account has `read:vulnerability_alerts` access to the repo.
+
+### 🛠️ Option B: Use Curl in Terminal or Script
+
+Use this if you want to automate the query or run it from CI tools:
+
+```bash
+curl -H "Authorization: bearer YOUR_GITHUB_TOKEN" \
+     -H "Content-Type: application/json" \
+     -X POST https://api.github.com/graphql \
+     -d '{"query": "query { repository(owner: \"your-org\", name: \"UserApp\") { vulnerabilityAlerts(first: 10) { nodes { vulnerableManifestFilename securityVulnerability { package { name } severity advis
+```
+
+---
+
+### 🧩 Summary Table
+
+| Feature                              | Status        | Access            |
+|--------------------------------------|---------------|--------------------|
+| Custom CodeQL Query Pack             | ✅ Created     | Enterprise Only    |
+| Org-wide Policy Enforcement          | ✅ Configured  | Enterprise Only    |
+| PR Block on Violations               | ✅ Enabled     | Enterprise Only    |
+| Security Graph API Query             | ✅ Available   | Enterprise Only    |
+| Custom Alerts via GraphQL            | ✅ Supported   | Enterprise Only    |
+
+
+
+---
+
 ## 🔍 CodeQL Workflow Capability Comparison: GitHub Pro vs GitHub Enterprise
 
 This table compares the capabilities and effects of the provided CodeQL GitHub Actions workflow when executed under **GitHub Pro** and **GitHub Enterprise (GHAS)** subscriptions.
