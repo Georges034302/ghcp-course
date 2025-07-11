@@ -200,9 +200,14 @@ jobs:
 ## ✅ Step 9: Add CodeQL Scan
 
 > **Prompt:** 
-> Create the file codeql.yaml in github root direction .github/workflows
-> Generate GitHub Actions workflow  for to run CodeQL for Java on PRs and pushes.”
-> Workflow triggers on changes in session2/java 
+> Create the file `codeql.yaml` in the `.github/workflows` directory at the root of the repository.  
+> Generate a GitHub Actions workflow that:
+> - Runs CodeQL analysis for Java  
+> - Triggers on both push and pull request events  
+> - Only runs when changes are made under the `session2/java/` directory  
+> - Uses the latest CodeQL action (`@v3`)  
+> - Includes proper permissions (`security-events: write`)  
+> - Includes a Maven build step before analysis  
 
 
 > ✅ **Expected Output (`.github/workflows/codeql.yml`):**

@@ -19,4 +19,5 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
       - name: Build with Maven
-        run: mvn
+        run: mvn clean package
+        working-directory: session2/java/PlayerApp
