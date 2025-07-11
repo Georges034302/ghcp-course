@@ -1,4 +1,4 @@
-name: your-org/codeql-query-pack
+name: userapp/find-secrets
 version: 0.0.1
 dependencies:
   codeql/java-all: "*"

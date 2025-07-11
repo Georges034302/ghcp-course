@@ -32,6 +32,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          packs: ./session2/java/security
+          packs: session2/java/security
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
