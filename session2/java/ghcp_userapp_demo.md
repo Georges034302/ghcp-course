@@ -398,12 +398,12 @@ select literal, "Potential hardcoded secret found: " + literal.getValue()
 Register the custom query pack and declare its dependency on the Java CodeQL libraries.
 
 > **Prompt:** \
-> Create a `qlpack.yml` for a CodeQL query pack named `userapp/find-secrets` (version 0.0.1) that depends on `codeql/java-all` and sets the default suite to run all
+> Create a `qlpack.yml` for a CodeQL query pack named `userapp/find-hardcoded-secrets` (version 0.0.1) that depends on `codeql/java-all` and sets the default suite to run all
 
 > ✅ **Expected Output:**
 
 ```yaml
-name: userapp/find-secrets
+name: userapp/find-hardcoded-secrets
 version: 0.0.1
 dependencies:
   codeql/java-all: "*"
@@ -413,7 +413,8 @@ defaultSuite:
 
 ### 🔗 Integrate Custom Query in CodeQL Workflow
 > **Prompt:** \
-> Update the codeql.yaml workflow to include a custom query folder located at .session2/java/security for Java scanning.
+> Update the codeql.yaml workflow to include a custom query folder located at .session2/java/security for Java scanning. 
+> The pack pointed to qlpack.yaml `userapp/find-hardcoded-secrets`
 
 > ✅ **Expected Output:**
 
@@ -422,7 +423,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    queries: ./security
+    packs: userapp/find-hardcoded-secrets
 ```
 
 ### 📝 Add Test Case for Secret Detection
