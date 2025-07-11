@@ -1,6 +1,8 @@
 package com.example.UserApp.controller;
 
 import com.example.UserApp.model.User;
+import com.example.UserApp.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class UserController {
 
     @Value("${app.api.key}")
     private String apiKey;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * Retrieves a user by email from the H2 database.
