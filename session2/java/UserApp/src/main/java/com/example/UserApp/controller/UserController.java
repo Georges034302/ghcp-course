@@ -42,7 +42,7 @@ public class UserController {
      * @throws SQLException if a database access error occurs
      */
     @PostMapping("/user")
-    public ResponseEntity<String> createUser(@RequestBody User user) throws SQLException {
+    public ResponseEntity<String> createUserInDb(@RequestBody User user) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:h2:mem:testdb", "sa", "");
         PreparedStatement pstmt = conn.prepareStatement("INSERT INTO users (name, email) VALUES (?, ?)");
         pstmt.setString(1, user.getName());
@@ -83,5 +83,35 @@ public class UserController {
         pstmt.setString(1, email);
         pstmt.executeUpdate();
         return ResponseEntity.ok("User deleted successfully");
+    }
+
+    /**
+     * Example: Get user by email
+     *
+     * @param email the email address of the user to search for
+     * @return ResponseEntity with the User object if found, or 404 Not Found if not
+     */
+    @GetMapping("/api/user")
+    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+        User user = userService.findByEmail(email);
+        if (user != null) {
+            // Use getEmail() for entity ID
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * Example: Create user
+     *
+     * @param user the User object to create
+     * @return ResponseEntity with the created User object
+     */
+    @PostMapping("/api/user")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        // Use setEmail() for entity ID
+        User created = userService.saveUser(user);
+        return ResponseEntity.ok(created);
     }
 }

@@ -90,7 +90,7 @@ spring.h2.console.enabled=true
 ## ✅ Step 4: Demonstrate Insecure Version (Before Copilot Fix)
 
 > **Prompt:**  
-> “Create an insecure version of `UserController`:
+> “Create an insecure version of `UserController`: (Use getEmail() for entity ID)
 > - Use `Statement` and string concatenation for SQL query
 > - Hardcode secret in the class”
 
@@ -132,8 +132,50 @@ public ResponseEntity<String> getUser(@RequestParam String email) throws SQLExce
 ```
 
 ---
+## ✅ Step 6: Add dependencies to POM.XML
 
-## ✅ Step 6: Generate Documentation with Copilot
+> **Prompt:** \
+> Open the `pom.xml` file  
+> Add the required dependencies to support:  
+> - Spring Web (`spring-boot-starter-web`)  
+> - Spring Data JPA (`spring-boot-starter-data-jpa`)  
+> - H2 in-memory database (`h2`)  
+>  
+> These are required to fix compilation errors related to:  
+> - `jakarta.persistence` (for `@Entity`, `@Id`)  
+> - `JpaRepository`  
+>  
+> Format the output as a single XML block (to copy into `<dependencies>`).
+
+
+```xml
+<!-- ...existing code... -->
+<dependencies>
+    <!-- Spring Boot Starter Data JPA -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <!-- H2 Database (for local testing) -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+    <!-- Jakarta Persistence API -->
+    <dependency>
+        <groupId>jakarta.persistence</groupId>
+        <artifactId>jakarta.persistence-api</artifactId>
+        <version>3.1.0</version>
+    </dependency>
+    <!-- ...other dependencies... -->
+</dependencies>
+<!-- ...existing code... -->
+```
+
+---
+
+## ✅ Step 7: Generate Documentation with Copilot
 
 > **Prompt:**  
 > Generate Javadoc for `UserController` methods:
@@ -151,7 +193,7 @@ public ResponseEntity<String> getUser(@RequestParam String email) throws SQLExce
 
 ---
 
-## ✅ Step 7: Create INSTRUCTIONS.md and CONTRIBUTING.md
+## ✅ Step 8: Create INSTRUCTIONS.md and CONTRIBUTING.md
 
 > **Prompt 1 (INSTRUCTIONS.md):**  
 > Create new `INSTRUCTIONS.md` in the UserApp directory \
@@ -164,7 +206,7 @@ public ResponseEntity<String> getUser(@RequestParam String email) throws SQLExce
 
 ---
 
-## ✅ Step 8: Add GitHub Actions CI/CD
+## ✅ Step 9: Add GitHub Actions CI/CD
 
 > **Prompt:**  
 > Create the file user-ci.yaml in github root direction .github/workflows
@@ -202,7 +244,7 @@ jobs:
 
 ---
 
-## ✅ Step 9: Add CodeQL Scan
+## ✅ Step 10: Add CodeQL Scan
 
 > **Prompt:** 
 > Create the file `codeql.yaml` in the `.github/workflows` directory at the root of the repository.  
@@ -257,7 +299,7 @@ jobs:
 
 ---
 
-## ✅ Step 10: Enable Secret Scanning and Push Protection
+## ✅ Step 11: Enable Secret Scanning and Push Protection
 
 
 ### ⚙️ Enable security features in GitHub:
@@ -275,7 +317,7 @@ These steps will enable secret scanning, push protection, and the dependency gra
 
 ---
 
-## ✅ Step 11: Add Dependabot
+## ✅ Step 12: Add Dependabot
 > **Prompt:**
 > Create the file `.github/dependabot.yml`  
 > Add a configuration to enable daily updates for Maven dependencies in the root directory  
