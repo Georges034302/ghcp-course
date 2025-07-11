@@ -2,8 +2,8 @@ name: .NET 8 CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    paths:
+      - 'session1/dotnet/**'
     branches: [ "main" ]
 
 jobs:
@@ -25,4 +25,4 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test ghcp-course.sln --no-build --configuration Release --verbosity normal
+        run: dotnet test ghcp-course.sln --no-build --configuration Release --verbosity

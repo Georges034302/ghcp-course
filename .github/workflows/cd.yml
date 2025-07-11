@@ -2,7 +2,10 @@ name: Deploy to Azure
 
 on:
   push:
-    branches: [ "main" ]
+    paths:
+      - 'session1/java/**'
+    branches:
+      - main
 
 jobs:
   deploy:
