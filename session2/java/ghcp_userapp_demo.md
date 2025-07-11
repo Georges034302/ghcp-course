@@ -343,25 +343,33 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 ### 📁 Create the Folder Structure
 
 > **Prompt:** \
-> Create the `session2/java/security` directory, create the following structure for a custom CodeQL rule:
-> - `qlpack.yml` 
-> - `queries/FindHardcodedSecrets.ql` 
+> Create the following directory structure for a custom CodeQL Java query pack:  
+> `codeql-packs/java/userapp-secrets/`  
+> Inside it, create:
+> - `qlpack.yml`  
+> - A `queries/` folder containing `FindHardcodedSecrets.ql`  
+
+
+> ✅ Expected Output:
+
 
 ✅ **Expected Output (File Tree):**
 
 ```bash
-mkdir -p session2/java/security/queries
-touch session2/java/security/qlpack.yaml
-touch session2/java/security/queries/FindHardcodedSecrets.ql
+mkdir -p codeql-packs/java/userapp-secrets/queries
+touch codeql-packs/java/userapp-secrets/qlpack.yml
+touch codeql-packs/java/userapp-secrets/queries/FindHardcodedSecrets.ql
 ```
 
 > ✅ **Expected Output:**
 
 ```
-security/
-├── qlpack.yml
-└── queries/
-└── FindHardcodedSecrets.ql
+codeql-packs/
+└── java/
+    └── userapp-secrets/
+        ├── qlpack.yml
+        └── queries/
+            └── FindHardcodedSecrets.ql
 ```
 
 ### ✨ Create `FindHardcodedSecrets.ql`
@@ -423,7 +431,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    packs: ./session2/java/security
+    packs: codeql-packs/java/userapp-secrets
 ```
 
 ### 📝 Add Test Case for Secret Detection
