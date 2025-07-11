@@ -31,4 +31,7 @@ Contributing Guide for UserApp (Spring Boot + Maven)
 - Reporting issues:
   - Use GitHub Issues for bugs and feature requests
   - Provide clear steps to reproduce and expected behavior
+- Test 1:
+  - code ql
+  - dependentbot
   
