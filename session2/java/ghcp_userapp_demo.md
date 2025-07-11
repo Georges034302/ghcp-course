@@ -45,13 +45,15 @@ rm UserApp.zip
 ## ✅ Step 2: Define the Clean Architecture
 
 > **Prompt:**  
-> “Generate a standard Spring Boot architecture for a REST API named `UserApp` that includes:
-> - Model: `User` entity with `email` and `name`
-> - Repository: `UserRepository` extends `JpaRepository`
-> - Service: `UserService` with method `getUserByEmail()`
-> - Controller: `UserController` that maps to `/api/user` and returns user info by email”
-> - Use touch to create the java classes (own display block)
-> - Provide the java classes code
+> Generate a standard Spring Boot architecture for a REST API named `UserApp` that includes:  
+> - **Model:** `User` entity with fields: `id (Long)`, `email (String)`, and `name (String)`  
+> - `id` should be the primary key (`@Id`)  
+> - **Repository:** `UserRepository` that extends `JpaRepository<User, Long>`  
+> - **Service:** `UserService` with method `getUserById(Long id)`  
+> - **Controller:** `UserController` mapped to `/api/user/{id}`, returning user info by ID  
+> - Use `touch` to create the Java class files (in a single `bash` display block)  
+> - Provide the full Java class code for each component in separate `java` blocks  
+
 
 
 > ✅ **Expected Output:**
@@ -90,7 +92,7 @@ spring.h2.console.enabled=true
 ## ✅ Step 4: Demonstrate Insecure Version (Before Copilot Fix)
 
 > **Prompt:**  
-> “Create an insecure version of `UserController`: (Use getEmail() for entity ID)
+> “Create an insecure version of `UserController`: 
 > - Use `Statement` and string concatenation for SQL query
 > - Hardcode secret in the class”
 
