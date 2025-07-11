@@ -1,0 +1,21 @@
+name: CodeQL
+
+on:
+  push:
+    paths:
+      - 'session2/java/**'
+    branches: [main]
+  pull_request:
+    paths:
+      - 'session2/java/**'
+    branches: [main]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: github/codeql-action/init@v2
+        with:
+          languages: java
+      - uses: github/codeql-action/analyze@v2

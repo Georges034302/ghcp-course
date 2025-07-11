@@ -17,6 +17,14 @@
 ## ✅ Step 1: Create Spring Boot Project
 
 ### ⛏️ Option A: Use Spring Initializr
+>*Prompt:\
+> Create a Spring Boot project using curl and Spring Initializr with the following:**
+> - Java 21  
+> - Maven project  
+> - Dependency: Spring Web  
+> - Project name and artifactId: `PlayerApp`  
+> - Save and unzip into `/workspaces/ghcp-course/session1/java/PlayerApp`, then delete the ZIP file.
+
 ```bash
 cd /workspaces/ghcp-course/session1/java
 mkdir PlayerApp
@@ -40,6 +48,7 @@ Run the app:
 ## 📁 Step 2: Project Structure with Copilot
 
 > *Prompt: Create this Spring Boot structure under `com.example.PlayerApp`:*
+
 ```
 src/main/java/com/example/PlayerApp/
 │
