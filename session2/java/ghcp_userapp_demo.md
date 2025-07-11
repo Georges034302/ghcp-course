@@ -349,3 +349,25 @@ updates:
 | Secret Scanning | ✅ Enabled |
 | Documentation | ✅ Generated |
 | Architecture  | ✅ Verified |
+
+# 🔍 CodeQL Workflow Capability Comparison: GitHub Pro vs GitHub Enterprise
+
+This table compares the capabilities and effects of the provided CodeQL GitHub Actions workflow when executed under **GitHub Pro** and **GitHub Enterprise (GHAS)** subscriptions.
+
+| Capability                                      | GitHub Pro (Public Repo) | GitHub Enterprise (GHAS)         |
+|------------------------------------------------|---------------------------|----------------------------------|
+| ✅ Workflow Execution Support                   | ✅ Yes                    | ✅ Yes                           |
+| 🔒 Private Repo Support                         | ❌ No                     | ✅ Yes                           |
+| 🚀 CodeQL Analysis Engine (v3)                  | ✅ Yes                    | ✅ Yes                           |
+| 📦 Code Scanning Alerts in Security Tab        | ✅ Yes                    | ✅ Yes                           |
+| 🔐 Upload security findings (`security-events`) | ✅ Yes                    | ✅ Yes                           |
+| 🔎 Custom CodeQL Queries                        | ❌ No                     | ✅ Yes                           |
+| 🧩 Central Policy Enforcement (org-wide rules)  | ❌ No                     | ✅ Yes                           |
+| 🛡️ Push Protection with CodeQL integration     | ❌ No                     | ✅ Yes                           |
+| 📊 GitHub Security Graph API Access             | ❌ Limited                | ✅ Full                          |
+| 📁 Organization-wide scan management            | ❌ No                     | ✅ Yes                           |
+| 🛠️ SARIF Integration for 3rd-party tools       | ✅ (manual)               | ✅ (full support)                |
+| 📅 Schedule-based or PR-based scan triggers     | ✅ Yes (basic)            | ✅ Yes (with enforcement options)|
+| 📓 Custom query packs from repo or org          | ❌ No                     | ✅ Yes                           |
+| 🔧 Fine-grained alert suppression / triage      | ❌ No                     | ✅ Yes                           |
+

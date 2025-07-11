@@ -17,4 +17,19 @@ public class UserService {
     public Optional<User> getUserByEmail(String email) {
         return repo.findById(email);
     }
+
+    // Add saveUser method
+    public User saveUser(User user) {
+        return repo.save(user);
+    }
+
+    // Add updateUser method (optional)
+    public User updateUser(User user) {
+        return repo.save(user);
+    }
+
+    // Add deleteUserByEmail method
+    public void deleteUserByEmail(String email) {
+        repo.deleteById(email);
+    }
 }
