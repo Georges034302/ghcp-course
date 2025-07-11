@@ -9,6 +9,7 @@ on:
 
 jobs:
   deploy:
+    name: Deploy Player App
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
