@@ -1,4 +1,4 @@
-name: userapp/find-hardcoded-secrets
+name: userapp/secrets
 version: 0.0.1
 dependencies:
   codeql/java-all: "*"

@@ -411,7 +411,7 @@ Register the custom query pack and declare its dependency on the Java CodeQL lib
 > ✅ **Expected Output:**
 
 ```yaml
-name: userapp/find-hardcoded-secrets
+name: userapp/secrets
 version: 0.0.1
 dependencies:
   codeql/java-all: "*"
@@ -431,7 +431,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    packs: codeql-packs/java/userapp-secrets
+    packs: ./codeql-packs/java/userapp-secrets
 ```
 
 ### 📝 Add Test Case for Secret Detection
