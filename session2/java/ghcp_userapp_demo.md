@@ -422,7 +422,7 @@ defaultSuite:
 ### 🔗 Integrate Custom Query in CodeQL Workflow
 > **Prompt:** \
 > Update the codeql.yaml workflow to include a custom query folder located at .session2/java/security for Java scanning. 
-> The workflow to reference qlpack.yaml `packs: ./codeql-packs/java/userapp-secrets`
+> The workflow to reference qlpack.yaml `queries: .github/codeql/queries`
 
 > ✅ **Expected Output:**
 
@@ -431,7 +431,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    queries: codeql-packs/java/userapp-secrets/queries
+    queries: .github/codeql/queries
 
 ### 📝 Add Test Case for Secret Detection
 
