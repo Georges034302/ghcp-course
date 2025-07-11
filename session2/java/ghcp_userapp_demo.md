@@ -423,7 +423,7 @@ defaultSuite:
   uses: github/codeql-action/init@v3
   with:
     languages: java
-    packs: userapp/find-hardcoded-secrets
+    packs: ./session2/java/security
 ```
 
 ### 📝 Add Test Case for Secret Detection
