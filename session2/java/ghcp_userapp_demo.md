@@ -275,6 +275,7 @@ on:
 
 permissions:
   security-events: write
+  contents: read
 
 jobs:
   analyze:
@@ -283,18 +284,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
+          cache: maven
+
+      # Debug logging for build issues
+      - name: Enable Debug Mode
+        run: |
+          echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+          echo "CODEQL_EXTRACTOR_JAVA_ROOT_CAUSE_ANALYSIS=true" >> $GITHUB_ENV
+
+      # Initialize CodeQL before building
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java
+          config-file: .github/codeql/config.yml
+          queries: .github/codeql/queries
+
+      # Build between init and analyze
       - name: Build with Maven
-        run: mvn clean install
-        working-directory: session2/java/UserApp
+        run: |
+          cd session2/java/UserApp
+          mvn -B clean compile --no-transfer-progress
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
 ```
