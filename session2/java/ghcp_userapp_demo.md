@@ -389,13 +389,16 @@ touch .github/codeql/queries/FindHardcodedSecrets.ql
 ```yaml 
 name: "CodeQL Config"
 
+disable-default-queries: false
+
 queries:
   - uses: security-and-quality
   - uses: security-extended
-  - local: .github/codeql/queries/FindHardcodedSecrets.ql
+  - uses: ./queries/FindHardcodedSecrets.ql
+    from: userapp/secrets
 
 paths:
-  - session2/java
+  - 'session2/java'
 
 paths-ignore:
   - '**/test/**'
@@ -407,7 +410,7 @@ paths-ignore:
 name: userapp/secrets
 version: 0.0.1
 dependencies:
-  codeql/java-all:
+  codeql/java-all: "*"
 ```
 
 ### ✨ Create `FindHardcodedSecrets.ql`
@@ -449,7 +452,7 @@ where
   )
 select 
   literal,
-  "Hardcoded secret detected: '" + literal.getValue()
+  "Hardcoded secret detected: '" + literal.getValue() + "'"
 ```
 
 ### 📝 Add Test Case for Secret Detection
