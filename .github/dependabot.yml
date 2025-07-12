@@ -1,6 +1,14 @@
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/"
+    directory: "/session2/java/UserApp"
     schedule:
       interval: "daily"
+    labels:
+      - "dependencies"
+      - "automerge"
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: "-"
+    commit-message:
+      prefix: "📦 deps:"

@@ -246,20 +246,52 @@ jobs:
 
 ---
 
-## ✅ Step 10: Add CodeQL Scan
-
-> **Prompt:** 
-> Create the file `codeql.yaml` in the `.github/workflows` directory at the root of the repository.  
-> Generate a GitHub Actions workflow that:
-> - Runs CodeQL analysis for Java  
-> - Triggers on both push and pull request events  
-> - Only runs when changes are made under the `session2/java/` directory  
-> - Uses the latest CodeQL action (`@v3`)  
-> - Includes proper permissions (`security-events: write`)  
-> - Includes a Maven build step before analysis  
+## ✅ Step 10: Enable Secret Scanning and Push Protection
 
 
-> ✅ **Expected Output (`.github/workflows/codeql.yml`):**
+### ⚙️ Enable security features in GitHub:
+
+1. Go to your repository on GitHub.
+2. Click on **Settings** (top right of the repo page).
+3. In the left sidebar, click **Code security**.
+4. Enable the following options:
+   - **Secret scanning** 🕵️‍♂️
+   - **Push protection** 🚦
+   - **Dependency graph** 📊
+5. Click **Save** 💾 if
+
+These steps will enable secret scanning, push protection, and the dependency graph for
+
+---
+
+## ✅ Step 11: Add CodeQL Scan 
+
+### 🛠️ Configure CodeQL Workflow (`.github/workflows/codeql.yml`)
+- Automated security analysis for Java code
+- Runs on push/PR to `session2/java` directory
+- Uses built-in and extended security queries
+
+### ⚡ Key Steps
+1. Checkout code
+2. Setup JDK 21
+3. Enable debug logging
+4. Initialize CodeQL
+5. Build Java code
+6. Run security analysis
+
+> **Prompt: Create CodeQL Workflow**  
+> Create the file `.github/workflows/codeql.yaml` with the following configuration to analyze Java code securely:  
+> - Use CodeQL v3 to scan Java code  
+> - Trigger analysis on `push` and `pull_request` events affecting `session2/java/**`  
+> - Set up JDK 21 using `temurin` with Maven caching enabled  
+> - Enable debug logging and root cause flags for troubleshooting  
+> - Use CodeQL query suites: `security-extended` and `security-and-quality`  
+> - Perform `mvn -B clean compile` inside `session2/java/UserApp`  
+> - Configure permissions correctly for CodeQL uploads  
+> - Ensure analysis runs on `ubuntu-latest`  
+> - Include all required steps: checkout, JDK setup, debug mode, CodeQL init, Maven build, CodeQL analyze  
+
+> ✅ **Expected Output (`.github/workflows/codeql.yaml`):**
 ```yaml
 name: CodeQL
 
@@ -318,43 +350,7 @@ jobs:
 
 ---
 
-## ✅ Step 11: Enable Secret Scanning and Push Protection
-
-
-### ⚙️ Enable security features in GitHub:
-
-1. Go to your repository on GitHub.
-2. Click on **Settings** (top right of the repo page).
-3. In the left sidebar, click **Code security**.
-4. Enable the following options:
-   - **Secret scanning** 🕵️‍♂️
-   - **Push protection** 🚦
-   - **Dependency graph** 📊
-5. Click **Save** 💾 if
-
-These steps will enable secret scanning, push protection, and the dependency graph for
-
----
-
-## ✅ Step 12: Add Dependabot
-> **Prompt:**
-> Create the file `.github/dependabot.yml`  
-> Add a configuration to enable daily updates for Maven dependencies in the root directory  
-
-
-> ✅ **Expected Output (`.github/dependabot.yml`):**
-```yaml
-version: 2
-updates:
-  - package-ecosystem: "maven"
-    directory: "/"
-    schedule:
-      interval: "daily"
-```
-
----
-
-## Step ✅ 13: Create a Custom CodeQL Query to Detect Hardcoded Secrets
+## Step ✅ 12: Create a Custom CodeQL Query to Detect Hardcoded Secrets
 Build and use a custom CodeQL query in a Java project to detect hardcoded secrets using GitHub Copilot and Actions.
 
 ### 📁 Create the Folder Structure
@@ -364,6 +360,7 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 > `.github/codeql/queries`  
 > Inside codeql, create:
 > - `qlpack.yml`  
+> - `config.yml`
 > - A `queries/` folder containing `FindHardcodedSecrets.ql`  
 
 
@@ -373,8 +370,12 @@ Build and use a custom CodeQL query in a Java project to detect hardcoded secret
 ✅ **Expected Output:**
 
 ```bash
+# Create directories
 mkdir -p .github/codeql/queries
-touch .github/codeql/queries/qlpack.yml
+
+# Create configuration files
+touch .github/codeql/config.yml
+touch .github/codeql/qlpack.yml
 touch .github/codeql/queries/FindHardcodedSecrets.ql
 ```
 
@@ -389,66 +390,53 @@ touch .github/codeql/queries/FindHardcodedSecrets.ql
 │       └── FindHardcodedSecrets.ql
 ```
 
+> `config.yml` -> Configures CodeQL analysis settings, paths, and query selection
+```yaml 
+name: "CodeQL Config"
+queries:
+  - uses: security-and-quality
+paths:
+  - session2/java
+paths-ignore:
+  - '**/test/**'
+```
+
+> `qlpack.yml` -> Defines query pack metadata and dependencies for custom queries
+```yaml
+name: userapp/secrets
+version: 0.0.1
+dependencies:
+  codeql/java-all:
+```
+
 ### ✨ Create `FindHardcodedSecrets.ql`
-> **Prompt:** \
-> Write a CodeQL query to detect hardcoded API keys or secrets in Java. 
-> Match string literals that include the words `apiKey`, `token`, `secret`, or `password`."
+> **Prompt: Create Custom CodeQL Query – Detect Hardcoded Secrets**  
+> Create a new query file named `FindHardcodedSecrets.ql` with the following logic and metadata:
+> - Identify hardcoded credentials such as API keys, tokens, secrets, and passwords  
+> - Use case-insensitive regular expression matching on Java string literals  
+> - Assign a `warning` severity and `security-severity` of `8.0`  
+> - Apply appropriate metadata for problem tagging, ID, and description  
+> - Target `StringLiteral` from the Java CodeQL library
 
 > ✅ **Expected Output:**
 
 ```ql
 /**
- * @name Hardcoded secret string
- * @description Flags string literals that look like API keys, tokens, or secrets.
+ * @name Find hardcoded secrets
+ * @description Detects hardcoded secrets in code
  * @kind problem
  * @problem.severity warning
+ * @security-severity 8.0
+ * @id java/hardcoded-secrets
  * @tags security
  */
 
 import java
-import semmle.code.java.dataflow.FlowSources
-import semmle.code.java.dataflow.TaintTracking
 
-class SuspiciousStringLiteral extends StringLiteral {
-  SuspiciousStringLiteral() {
-    this.getValue().regexpMatch("(?i)(api[_-]?key|token|secret|password).*")
-  }
-}
-
-from SuspiciousStringLiteral literal
-select literal, "Potential hardcoded secret found: " + literal.getValue()
+from StringLiteral literal
+where literal.getValue().regexpMatch("(?i).*(api[_-]?key|token|secret|password).*")
+select literal, "Potential hardcoded secret detected"
 ```
-
-### ✨ Create qlpack.yml File
-Register the custom query pack and declare its dependency on the Java CodeQL libraries.
-
-> **Prompt:** \
-> Create a `qlpack.yml` for a CodeQL query pack named `userapp/secrets` (version 0.0.1) that depends on `codeql/java-all` and sets the default suite to run all
-
-> ✅ **Expected Output:**
-
-```yaml
-name: userapp/secrets
-version: 0.0.1
-dependencies:
-  codeql/java-all: "*"
-defaultSuite:
-  - query: queries/
-```
-
-### 🔗 Integrate Custom Query in CodeQL Workflow
-> **Prompt:** \
-> Update the codeql.yaml workflow to include a custom query folder located at queries: .github/codeql for Java scanning. 
-> The workflow to reference qlpack.yaml `queries: .github/codeql/queries`
-
-> ✅ **Expected Output:**
-
-```yaml
-- name: Initialize CodeQL
-  uses: github/codeql-action/init@v3
-  with:
-    languages: java
-    queries: .github/codeql/queries
 
 ### 📝 Add Test Case for Secret Detection
 
@@ -477,9 +465,66 @@ Push this test file and monitor GitHub Actions CodeQL workflow logs for detected
 Potential hardcoded secret found: sk_test_abc123
 ```
 
-> 🧠 NOTE: \
-> To see results in the Security tab, GitHub Enterprise (GHAS) is required. \
-> On GitHub Pro, review results from the CI logs only.
+> 🧠 **NOTE: Viewing CodeQL Analysis Results**
+>
+> On **GitHub Pro (Public Repos)**:
+> - ✅ Results can only be viewed in **GitHub Actions CI logs**
+> - ❌ No access to the **Security** tab for CodeQL scan results
+>
+> On **GitHub Enterprise (GHAS)**:
+> 1. **Accessing the Security Tab**
+>    - Navigate to your repository  
+>    - Click the **"Security"** tab  
+>    - Select **"Code scanning"** from the left sidebar  
+>    - View detailed **CodeQL analysis results**
+>
+> 2. **Available Features**
+>    - Full analysis visualization  
+>    - Custom query results  
+>    - Interactive code navigation  
+>    - Vulnerability tracking  
+>    - Pull Request (PR) integration  
+>    - Historical trend analysis  
+>
+> 3. **Key Locations**
+>    - `Security` → `Code scanning alerts`  
+>    - `Security` → `Code scanning analyses`  
+>    - Pull Request checks with inline annotations  
+>    - Security Overview dashboard
+
+
+
+---
+
+## ✅ Step 13: Add Dependabot
+> **Prompt:**
+> Create a `.github/dependabot.yml` file with:
+> - `version: 2`
+> - Enable updates for `maven` packages
+> - Set directory to `/session2/java/UserApp` (where `pom.xml` resides)
+> - Schedule updates to run **daily**
+> - Add dependencies and automerge labels
+> - Limit number of open PRs
+> - Configure PR title format
+
+> ✅ **Expected Output (`.github/dependabot.yml`):**
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/session2/java/UserApp"
+    schedule:
+      interval: "daily"
+    labels:
+      - "dependencies"
+      - "automerge"
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: "-"
+    commit-message:
+      prefix: "📦 deps:"
+```
+
 ---
 
 ## ✅ Step 14: Enforce Org-Wide CodeQL Policy *(Enterprise Only)*
@@ -490,49 +535,65 @@ Potential hardcoded secret found: sk_test_abc123
 > The policy should:
 > - Include the query pack from a central location
 > - Target Java projects
-> - Block PRs that violate the rule
+> - Block commits that violate the rule
 
 > ✅ **Expected Output (`.github/codeql/org-policy.yml`):**
 ```yaml
+name: "Organization Security Policy"
+disable-default-queries: false
+
+# Query configuration
 queries:
-  - uses: your-org/codeql-query-pack/FindHardcodedSecrets.ql
-languages:
+  - uses: org/codeql-queries@v1.0.0/java/security/FindHardcodedSecrets.ql
+  - uses: security-and-quality
+
+# Language settings
+languages: 
   - java
-enforce:
-  block_on_violation: true
+
+# Path filters
+paths:
+  - '**/*.java'
+paths-ignore:
+  - '**/test/**'
+  - '**/generated/**'
+
+# Enforcement rules
+rules:
+  - id: java/hardcoded-secrets
+    severity: error
+    paths:
+      - '**/*.java'
+    mode: block
+    message: |
+      Hardcoded secrets detected. Please:
+      1. Remove hardcoded credentials
+      2. Use GitHub Secrets instead
+      3. Update configuration to use environment variables
 ```
 
-> ✅ **Expected Output (`FindHardcodedSecrets.ql`):**
-```ql
-/**
- * @name Hardcoded secret string
- * @description Detects suspicious string literals that may contain API keys, secrets, or tokens.
- * @kind problem
- * @problem.severity warning
- * @tags security
- */
-
-import java
-
-class SuspiciousSecret extends StringLiteral {
-  SuspiciousSecret() {
-    this.getValue().regexpMatch("(?i)(api[_-]?key|token|secret|password).*")
-  }
-}
-
-from SuspiciousSecret s
-select s, "Potential hardcoded secret found: " + s.getValue()
-```
-
-> ✅ **Expected Output (`qlpack.yml`):**
-```yaml
-name: your-org/codeql-query-pack
-version: 0.0.1
-dependencies:
-  codeql/java-all: "*"
-defaultSuite:
-  - query: queries/
-```
+> 🛡️ **NOTE: Purpose of `Organization Security Policy`**
+>
+> This CodeQL configuration (`codeql-config.yml`) enforces a **centralized security scanning policy** across the organization:
+>
+> - **🔍 Custom Query Usage**  
+>   Integrates a custom query `FindHardcodedSecrets.ql` from an internal org pack (`org/codeql-queries@v1.0.0`), along with the default `security-and-quality` suite.
+>
+> - **🗂️ Scope Definition**  
+>   Restricts scanning to `.java` source files only, excluding test and generated code paths.
+>
+> - **🚫 Policy Enforcement**  
+>   Applies a **blocking rule** for the `java/hardcoded-secrets` query:
+>   - Marks any violations as `error`
+>   - Prevents merges unless hardcoded secrets are removed
+>
+> - **📣 Developer Guidance**  
+>   Displays a message with instructions to:
+>   1. Remove hardcoded credentials  
+>   2. Use **GitHub Secrets** for sensitive values  
+>   3. Configure app to use **environment variables**
+>
+> 🔁 This policy ensures all Java code in the org complies with security best practices by enforcing strict scanning and remediation before code is merged.
 
 ---
 
@@ -548,17 +609,18 @@ defaultSuite:
 
 > ✅ **Expected Output (GraphQL Query):**
 ```graphql
-query {
-  repository(owner: "your-org", name: "UserApp") {
-    vulnerabilityAlerts(first: 10) {
+query VulnerabilityAlerts {
+  repository(owner: "YOUR_USERNAME", name: "ghcp-course") {
+    vulnerabilityAlerts(first: 100, states: OPEN) {
       nodes {
-        vulnerableManifestFilename
+        vulnerableManifestPath
         securityVulnerability {
-          package { name }
+          package {
+            name
+          }
           severity
           advisory {
             description
-            identifiers { type value }
           }
         }
       }
@@ -577,71 +639,104 @@ You can retrieve vulnerability alerts (e.g. from CodeQL, Dependabot) using GitHu
 
 1. Open: [GitHub GraphQL Explorer](https://docs.github.com/en/graphql/overview/explorer)
 2. Sign in with an account that has access to the repository
-3. Paste and run the following query:
+3. Paste the query in left panel
+4. Click the "Play" button (▶️)
+5. View results in right panel
 
-```graphql
-query {
-  repository(owner: "your-org", name: "UserApp") {
-    vulnerabilityAlerts(first: 10) {
-      nodes {
-        vulnerableManifestFilename
-        securityVulnerability {
-          package { name }
-          severity
-          advisory {
-            description
-            identifiers { type value }
-          }
-        }
-      }
-    }
-  }
-}
-```
+> 🧠 **NOTE: Required Setup for Security Features**
+>
+> ### 🔑 Repository Configuration
+>
+> 1. **Repository Settings**
+>    - Replace `YOUR_USERNAME` with your actual GitHub username
+>    - Replace `ghcp-course` with your repository name
+>
+> 2. **Token Permissions**
+>    - `read:security_events` scope
+>    - `repo` scope (required for private repositories)
+>    - `security_events` scope
+>
+> 3. **Access Requirements**
+>    | Repository Type | Required Access |
+>    |------------------|------------------|
+>    | Public           | Read access      |
+>    | Private          | Write access     |
+>    | Security-related | Admin access     |
+>
+> 4. **Feature Enablement**
+>    - Navigate to your repository’s **Settings**
+>    - Go to **Security** → **Code scanning**
+>    - Enable **Dependabot alerts**
+>    - Enable **Security updates**
 
-> ⚠️ Replace `"your-org"` and `"UserApp"` with your actual organization and repository names.  
-> 🔐 Ensure your GitHub account has `read:vulnerability_alerts` access to the repo.
+
 
 ### 🛠️ Option B: Use Curl in Terminal or Script
 
 Use this if you want to automate the query or run it from CI tools:
 
 ```bash
-curl -H "Authorization: bearer YOUR_GITHUB_TOKEN" \
+# Set your token
+export GITHUB_TOKEN="your_token"
+
+# Run query
+curl -H "Authorization: bearer $GITHUB_TOKEN" \
      -H "Content-Type: application/json" \
      -X POST https://api.github.com/graphql \
-     -d '{"query": "query { repository(owner: \"your-org\", name: \"UserApp\") { vulnerabilityAlerts(first: 10) { nodes { vulnerableManifestFilename securityVulnerability { package { name } severity advis
+     -d '{"query":"query { repository(owner: \"YOUR_USERNAME\", name: \"ghcp-course\") { vulnerabilityAlerts(first: 100, states: OPEN) { nodes { vulnerableManifestPath securityVulnerability { package { name } severity advisory { description } } } } } }"}'
+```
+
+> ✅ **Expected Output (GraphQL Query):**
+```json
+{
+  "data": {
+    "repository": {
+      "vulnerabilityAlerts": {
+        "nodes": [
+          {
+            "securityVulnerability": {
+              "package": {
+                "name": "org.springframework.boot"
+              },
+              "severity": "HIGH",
+              "advisory": {
+                "description": "Vulnerability in Spring Boot..."
+              }
+            },
+            "vulnerableManifestPath": "session2/java/UserApp/pom.xml"
+          }
+        ]
+      }
+    }
+  }
+}
 ```
 
 ---
 
-### 🧩 Summary Table
+## 🧩 Summary: GHCP Instructor Demo – `UserApp` with Copilot, CodeQL, and GitHub Security
 
-| Feature                              | Status        | Access            |
-|--------------------------------------|---------------|--------------------|
-| Custom CodeQL Query Pack             | ✅ Created     | Enterprise Only    |
-| Org-wide Policy Enforcement          | ✅ Configured  | Enterprise Only    |
-| PR Block on Violations               | ✅ Enabled     | Enterprise Only    |
-| Security Graph API Query             | ✅ Available   | Enterprise Only    |
-| Custom Alerts via GraphQL            | ✅ Supported   | Enterprise Only    |
+| 🔢 Step | 🛠️ Task                                 | 🎯 Description                                                                                  |
+|--------:|------------------------------------------|--------------------------------------------------------------------------------------------------|
+| 1️⃣     | **Scaffold Project**                     | Generate a Spring Boot app using Spring Initializr with Java 21, Web, JPA, and H2 DB.           |
+| 2️⃣     | **Define Clean Architecture**            | Build `User`, `UserRepository`, `UserService`, and `UserController` structure.                  |
+| 3️⃣     | **Add Configuration**                    | Create `application.properties` with API key and H2 datasource + Hibernate settings.            |
+| 4️⃣     | **Create Vulnerable Version**            | Add hardcoded secret and unsafe SQL using `Statement` to simulate poor security practices.      |
+| 5️⃣     | **Refactor with Copilot**                | Ask Copilot to detect and fix vulnerabilities using `@Value` and `PreparedStatement`.           |
+| 6️⃣     | **Add Dependencies to POM**              | Insert Spring Web, Data JPA, H2, and Jakarta Persistence dependencies in `pom.xml`.             |
+| 7️⃣     | **Generate Javadoc with Copilot**        | Prompt Copilot to add method-level documentation for `UserController`.                         |
+| 8️⃣     | **Documentation Setup**                  | Add `INSTRUCTIONS.md` and `CONTRIBUTING.md` with setup, API, and contribution guidelines.       |
+| 9️⃣     | **Configure CI Workflow**                | Create `user-ci.yml` for GitHub Actions CI with Java 21 and Maven build on push/PR.             |
+| 🔟     | **Enable GitHub Security Features**      | Turn on Secret Scanning, Push Protection, and Dependency Graph in GitHub repository settings.   |
+| 1️⃣1️⃣   | **Add CodeQL Scan Workflow**            | Add `.github/workflows/codeql.yml` for static analysis using `security-extended` queries.       |
+| 1️⃣2️⃣   | **Custom CodeQL Query: Secrets**        | Create `FindHardcodedSecrets.ql` using regex on string literals to detect embedded secrets.     |
+| 1️⃣3️⃣   | **Setup Dependabot Updates**            | Use `.github/dependabot.yml` to auto-update Maven dependencies daily with proper labels.        |
+| 1️⃣4️⃣   | **Org-Wide CodeQL Policy** *(GHES)*     | Enforce hardcoded secret checks with a blocking rule in `org-policy.yml` across Java projects.  |
+| 1️⃣5️⃣   | **Security GraphQL API Query** *(GHES)* | Use GitHub GraphQL API to retrieve open security alerts with advisory details.                  |
 
+📌 *Legend:*
+- ✅ Public repo workflows run fully under GitHub Pro (except Security tab support for custom CodeQL).
+- 🛡️ Steps 14 & 15 require **GitHub Enterprise (GHAS)** for organization-wide policy and API access.
 
-
----
-
-## 🔍 CodeQL Workflow Capability Comparison: GitHub Pro vs GitHub Enterprise
-
-This table compares the capabilities and effects of the provided CodeQL GitHub Actions workflow when executed under **GitHub Pro** and **GitHub Enterprise (GHAS)** subscriptions.
-| Capability                                            | **GitHub Pro (Public Repo)** | **GitHub Pro (Private Repo)** | **GitHub Enterprise (GHAS)** |
-| ----------------------------------------------------- | ---------------------------- | ----------------------------- | ---------------------------- |
-| **Run CodeQL via GitHub Actions**                     | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
-| **Use Custom CodeQL Queries** (local repo queries)    | ✅ Yes (CI log only)          | ✅ Yes (CI log only)           | ✅ Yes (CI + Security tab)    |
-| **Upload results to Security tab (Code Scanning UI)** | ✅ Yes (built-in only)        | ❌ No                          | ✅ Yes (custom + built-in)    |
-| **Secret Scanning (automatic)**                       | ✅ Yes                        | ❌ No                          | ✅ Yes                        |
-| **Push Protection for secrets**                       | ✅ Yes                        | ❌ No                          | ✅ Yes                        |
-| **Dependabot Alerts**                                 | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
-| **Dependabot Security Updates**                       | ✅ Yes                        | ✅ Yes                         | ✅ Yes                        |
-| **Policy enforcement / org-wide query management**    | ❌ No                         | ❌ No                          | ✅ Yes                        |
-| **Security Graph API Access (full)**                  | ❌ Limited                    | ❌ Limited                     | ✅ Yes                        |
 
 
