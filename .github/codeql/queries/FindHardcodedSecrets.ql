@@ -10,16 +10,8 @@
 
 import java
 
-from StringLiteral literal
-where 
-  exists(Field field |
-    // Match field name patterns
-    field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
-    // Match field initialization
-    literal = field.getInitializer() and
-    // Match common secret patterns in value
-    literal.getValue().regexpMatch("(?i).*(sk_.*|apikey_.*|token_.*|[a-zA-Z0-9+/=]{32,})")
-  )
-select 
-  literal,
-  "Hardcoded secret detected: '" + literal.getValue()
+from Field field, StringLiteral literal
+where
+  field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
+  literal.getValue().regexpMatch("(?i).*(sk_.*|apikey_.*|token_.*|[a-zA-Z0-9+/=]{32,})")
+select field, "Field: " + field.getName() + ", Value: " + literal.getValue()
