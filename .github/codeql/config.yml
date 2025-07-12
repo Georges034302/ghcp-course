@@ -5,8 +5,8 @@ disable-default-queries: false
 queries:
   - uses: security-and-quality
   - uses: security-extended
-  - uses: ./queries/FindHardcodedSecrets.ql
-    from: userapp/secrets
+  - uses: .
+    from: userapp-secrets
 
 paths:
   - 'session2/java'
