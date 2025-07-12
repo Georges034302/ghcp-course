@@ -411,12 +411,11 @@ dependencies:
 
 ### ✨ Create `FindHardcodedSecrets.ql`
 > **Prompt: Create Custom CodeQL Query – Detect Hardcoded Secrets**  
-> Create a new query file named `FindHardcodedSecrets.ql` with the following logic and metadata:
-> - Identify hardcoded credentials such as API keys, tokens, secrets, and passwords  
-> - Use case-insensitive regular expression matching on Java string literals  
-> - Assign a `warning` severity and `security-severity` of `8.0`  
-> - Apply appropriate metadata for problem tagging, ID, and description  
-> - Target `StringLiteral` from the Java CodeQL library
+> Create FindHardcodedSecrets.ql to detect hardcoded credentials:
+> - Add query metadata with name, description, and severity
+> - Target Java string literals and fields 
+> - Match sensitive field names and values 
+> - Report detected secrets with field context
 
 > ✅ **Expected Output:**
 
@@ -433,9 +432,15 @@ dependencies:
 
 import java
 
-from StringLiteral literal
-where literal.getValue().regexpMatch("(?i).*(api[_-]?key|token|secret|password).*")
-select literal, "Potential hardcoded secret detected"
+from StringLiteral literal, Field field
+where 
+  // Check field name contains sensitive keywords
+  field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
+  // Check if literal initializes this field
+  literal = field.getInitializer().(CompileTimeConstantExpr) and
+  // Check if value matches secret pattern
+  literal.getValue().regexpMatch("(?i).*(sk_.*|[a-zA-Z0-9]{32,})")
+select literal, "Hardcoded secret detected in field '" + field.getName() + "'"
 ```
 
 ### 📝 Add Test Case for Secret Detection
