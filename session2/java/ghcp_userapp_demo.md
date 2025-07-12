@@ -395,7 +395,7 @@ queries:
   - uses: security-and-quality
   - uses: security-extended
   - uses: .
-    from: userapp-secrets
+    from: userapp/secrets
 
 paths:
   - 'session2/java'
@@ -441,16 +441,16 @@ dependencies:
 import java
 
 from StringLiteral literal
-where 
+where
   exists(Field field |
-    // Match field name patterns
+    // Match field name patterns (case-insensitive)
     field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
-    // Match field initialization
+    // Match field initialization - this links the literal to the field
     literal = field.getInitializer() and
-    // Match common secret patterns in value
+    // Match common secret patterns in the literal's value
     literal.getValue().regexpMatch("(?i).*(sk_.*|apikey_.*|token_.*|[a-zA-Z0-9+/=]{32,})")
   )
-select 
+select
   literal,
   "Hardcoded secret detected: '" + literal.getValue() + "'"
 ```

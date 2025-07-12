@@ -6,7 +6,7 @@ queries:
   - uses: security-and-quality
   - uses: security-extended
   - uses: .
-    from: userapp-secrets
+    from: userapp/secrets
 
 paths:
   - 'session2/java'
