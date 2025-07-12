@@ -323,21 +323,20 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Debug logging for build issues
       - name: Enable Debug Mode
         run: |
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
           echo "CODEQL_EXTRACTOR_JAVA_ROOT_CAUSE_ANALYSIS=true" >> $GITHUB_ENV
 
-      # Initialize CodeQL with built-in queries first
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java
           config-file: .github/codeql/config.yml
-          queries: .github/codeql/queries/FindHardcodedSecrets.ql
-
-      # Build step between init and analyze
+          queries: 
+            +.github/codeql/queries/FindHardcodedSecrets.ql
+            +security-extended
+            +security-and-quality
       - name: Build with Maven
         run: |
           cd session2/java/UserApp
