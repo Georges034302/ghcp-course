@@ -353,10 +353,11 @@ jobs:
           ls -R session2/java/UserApp/target/
 
       - name: Upload SARIF
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: codeql-results
           path: results/java.sarif
+          retention-days: 5
 ```
 
 ### 🔧 Local CodeQL Security Test
