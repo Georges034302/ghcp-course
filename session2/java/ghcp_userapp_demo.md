@@ -550,6 +550,7 @@ select
 ### 📝 Add Test Case for Secret Detection
 > **Prompt: \
 > Provide Test cases for the ql script in User.java model
+> API_KEY, String_TOKEN, SECRET, ENCODED, DESCRIPTION
 ```java
 package com.example.UserApp.model;
 
@@ -573,7 +574,7 @@ public class User {
     // ✅ Test case: Password pattern
     private static final String PASSWORD = "myS3cretP@ssw0rd";
 
-    // ✅ Test case: Base64-like string (32+ chars)
+    // ✅ Test case: Base64-like string
     private static final String ENCODED = "dGhpcyBpcyBhIHZlcnlMb25nU3RyaW5nQmFzZTY0";
 
     // ❌ Should NOT match (not a sensitive field name)
