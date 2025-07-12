@@ -47,3 +47,19 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:java"
+          output: results
+
+      - name: Debug Info
+        run: |
+          echo "Contents of .github/codeql:"
+          ls -R .github/codeql/
+          echo "Maven build directory:"
+          ls -R session2/java/UserApp/target/
+
+      - name: Upload SARIF
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeql-results
+          path: results/java.sarif

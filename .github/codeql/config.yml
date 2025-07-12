@@ -9,8 +9,13 @@ queries:
     from: userapp/secrets
 
 paths:
-  - 'session2/java'
+  - 'session2/java/UserApp/src/main/java'
 
 paths-ignore:
   - '**/test/**'
   - '**/generated/**'
+  - '**/target/**'
+
+query-filters:
+  - exclude:
+      tags contain: test

@@ -341,6 +341,92 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:java"
+          output: results
+
+      - name: Debug Info
+        run: |
+          echo "Contents of .github/codeql:"
+          ls -R .github/codeql/
+          echo "Maven build directory:"
+          ls -R session2/java/UserApp/target/
+
+      - name: Upload SARIF
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeql-results
+          path: results/java.sarif
+```
+
+### 🔧 Local CodeQL Security Test
+
+```bash
+# Create directory for CodeQL
+mkdir -p ~/codeql-home
+cd ~/codeql-home
+
+# Download latest release
+wget https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip
+
+# Unzip the package
+unzip codeql-linux64.zip
+
+# Add to .bashrc
+echo 'export PATH=$PATH:~/codeql-home/codeql' >> ~/.bashrc
+source ~/.bashrc
+
+# Check CodeQL version
+codeql --version
+
+# Test CLI works
+codeql resolve languages
+
+# Download standard query bundle
+codeql pack download codeql/java-queries
+
+# Initialize workspace
+codeql pack init
+```
+
+```bash
+# Create new database
+codeql database create db \
+  --language=java \
+  --command "mvn clean compile" \
+  --source-root session2/java/UserApp \
+  --overwrite
+```
+
+```bash
+# Navigate to CodeQL config directory
+cd /workspaces/ghcp-course/.github/codeql
+
+# Install dependencies
+codeql pack install
+
+```bash
+# Navigate to CodeQL config directory
+cd /workspaces/ghcp-course/.github/codeql
+
+# Install dependencies
+codeql pack install
+```
+
+```bash
+# Install Java analysis pack
+codeql pack download codeql/java-all
+
+# Install security queries
+codeql pack download codeql/java-queries
+```
+
+```bash
+# Navigate back to project root
+cd /workspaces/ghcp-course
+
+# Run the query
+codeql query run .github/codeql/queries/FindHardcodedSecrets.ql --database=db
 ```
 
 ---
@@ -398,11 +484,16 @@ queries:
     from: userapp/secrets
 
 paths:
-  - 'session2/java'
+  - 'session2/java/UserApp/src/main/java'
 
 paths-ignore:
   - '**/test/**'
   - '**/generated/**'
+  - '**/target/**'
+
+query-filters:
+  - exclude:
+      tags contain: test
 ```
 
 > `qlpack.yml` -> Defines query pack metadata and dependencies for custom queries

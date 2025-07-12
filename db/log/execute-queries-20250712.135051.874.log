@@ -1,0 +1,58 @@
+[2025-07-12 13:50:51] This is codeql execute queries -J-Xmx1388M --verbosity=progress --logdir=/workspaces/ghcp-course/db/log --evaluator-log-level=5 --warnings=show --qlconfig-file=/workspaces/ghcp-course/qlconfig.yml --dynamic-join-order-mode=none -- /workspaces/ghcp-course/db/db-java path:/workspaces/ghcp-course/.github/codeql/queries/FindHardcodedSecrets.ql
+[2025-07-12 13:50:51] Calling plumbing command: codeql resolve queries --qlconfig-file=/workspaces/ghcp-course/qlconfig.yml --format=json -- path:/workspaces/ghcp-course/.github/codeql/queries/FindHardcodedSecrets.ql
+[2025-07-12 13:50:52] [PROGRESS] resolve queries> Recording pack reference userapp/secrets at /workspaces/ghcp-course/.github/codeql.
+[2025-07-12 13:50:52] Plumbing command codeql resolve queries completed:
+                      [
+                        "/workspaces/ghcp-course/.github/codeql/queries/FindHardcodedSecrets.ql"
+                      ]
+[2025-07-12 13:50:52] Creating executor with 1 threads.
+[2025-07-12 13:50:52] Calling plumbing command: codeql resolve extensions --qlconfig-file=/workspaces/ghcp-course/qlconfig.yml --include-extension-row-locations path:/workspaces/ghcp-course/.github/codeql/queries/FindHardcodedSecrets.ql
+[2025-07-12 13:50:52] Calling plumbing command: codeql resolve queries --qlconfig-file=/workspaces/ghcp-course/qlconfig.yml --allow-library-packs --format startingpacks -- path:/workspaces/ghcp-course/.github/codeql/queries/FindHardcodedSecrets.ql
+[2025-07-12 13:50:52] [PROGRESS] resolve queries> Recording pack reference userapp/secrets at /workspaces/ghcp-course/.github/codeql.
+[2025-07-12 13:50:52] Plumbing command codeql resolve queries completed:
+                      [
+                        "/workspaces/ghcp-course/.github/codeql"
+                      ]
+[2025-07-12 13:50:52] Calling plumbing command: codeql resolve extensions-by-pack --qlconfig-file=/workspaces/ghcp-course/qlconfig.yml --include-extension-row-locations -- /workspaces/ghcp-course/.github/codeql
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] userapp/secrets: not 0.0.1 {root: userapp/secrets@0.0.1}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [DERIVATION] userapp/secrets: 0.0.1 {userapp/secrets: not 0.0.1 {root: userapp/secrets@0.0.1}}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] userapp/secrets: * [*], codeql/java-all: not * {dependency: userapp/secrets@* [*] requires codeql/java-all@*}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [DECISION 1] userapp/secrets: 0.0.1
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [DERIVATION] codeql/java-all: * {userapp/secrets: * [*], codeql/java-all: not * {dependency: userapp/secrets@* [*] requires codeql/java-all@*}}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] codeql/java-all: * [*] {pack not found: codeql/java-all}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [CONFLICT] codeql/java-all: * [*] {pack not found: codeql/java-all}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack>   [CONSTRAINT] codeql/java-all: *
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack>   [CONSTRAINT] userapp/secrets: 0.0.1
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack>   [SATISFIER] derivation: codeql/java-all: *
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack>   [ALMOST_SATISFIER] <none>
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [INCOMPATIBILITY] userapp/secrets: * [*] {conflict}
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack> [FAILURE]
+[2025-07-12 13:50:52] [SPAMMY] resolve extensions-by-pack>   Because 'userapp/secrets' depends on 'codeql/java-all@*', but pack 'codeql/java-all' was not found, version solving failed.
+[2025-07-12 13:50:52] [ERROR] resolve extensions-by-pack> ERROR: Referenced pack 'codeql/java-all' was not found locally, and no lock file is present for 'userapp/secrets'. Run 'codeql pack install' to create the lock file and download the dependencies. (/workspaces/ghcp-course/.github/codeql/qlpack.yml:1,1-1)
+[2025-07-12 13:50:52] [ERROR] resolve extensions-by-pack> ERROR: No valid pack solution found:
+                              Because 'userapp/secrets' depends on 'codeql/java-all@*', but pack 'codeql/java-all' was not found, version solving failed.
+                               (/workspaces/ghcp-course/.github/codeql/qlpack.yml:1,1-1)
+[2025-07-12 13:50:52] Sequence stamp origin is -6027693457592442068
+[2025-07-12 13:50:52] Pausing evaluation to close the cache at sequence stamp o+0
+[2025-07-12 13:50:52] The disk cache is freshly trimmed; leave it be.
+[2025-07-12 13:50:52] Unpausing evaluation
+[2025-07-12 13:50:52] Exception caught at top level: A 'codeql resolve extensions-by-pack' operation failed with error code 2
+                      com.semmle.cli2.picocli.PlumbingRunner.call(PlumbingRunner.java:75)
+                      com.semmle.cli2.picocli.SubcommandCommon.callPlumbingInProcess(SubcommandCommon.java:170)
+                      com.semmle.cli2.resolve.ResolveExtensionsCommand.executeJSON(ResolveExtensionsCommand.java:59)
+                      com.semmle.cli2.resolve.ResolveExtensionsCommand.executeJSON(ResolveExtensionsCommand.java:18)
+                      com.semmle.cli2.picocli.SimpleJsonSubcommand.executeInsistingOnJSONWithExistingMessages(SimpleJsonSubcommand.java:121)
+                      com.semmle.cli2.picocli.SubcommandCommon.withCompilationMessages(SubcommandCommon.java:444)
+                      com.semmle.cli2.picocli.SimpleJsonSubcommand.executeInsistingOnJSON(SimpleJsonSubcommand.java:110)
+                      com.semmle.cli2.picocli.PlumbingRunner.call(PlumbingRunner.java:61)
+                      com.semmle.cli2.picocli.SubcommandCommon.callPlumbingInProcess(SubcommandCommon.java:170)
+                      com.semmle.cli2.execute.ExecuteQueriesCommand.resolveExtensions(ExecuteQueriesCommand.java:856)
+                      com.semmle.cli2.execute.ExecuteQueriesCommand.executeSubcommand(ExecuteQueriesCommand.java:471)
+                      com.semmle.cli2.picocli.SubcommandCommon.lambda$executeSubcommandWithMessages$5(SubcommandCommon.java:892)
+                      com.semmle.cli2.picocli.SubcommandCommon.withCompilationMessages(SubcommandCommon.java:444)
+                      com.semmle.cli2.picocli.SubcommandCommon.executeSubcommandWithMessages(SubcommandCommon.java:890)
+                      com.semmle.cli2.picocli.SubcommandCommon.toplevelMain(SubcommandCommon.java:777)
+                      com.semmle.cli2.picocli.SubcommandCommon.call(SubcommandCommon.java:757)
+                      com.semmle.cli2.picocli.SubcommandMaker.runMain(SubcommandMaker.java:238)
+                      com.semmle.cli2.picocli.SubcommandMaker.runMain(SubcommandMaker.java:259)
+                      com.semmle.cli2.CodeQL.main(CodeQL.java:115)
