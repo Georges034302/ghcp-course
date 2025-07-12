@@ -417,6 +417,9 @@ dependencies:
 > - Find values matching common secret patterns (`sk_*`, `apikey_*`, `token_*`, base64)
 > - Report detected secrets with their actual values
 > - Include standard CodeQL metadata
+> - Ensure the query matches all field initializations with sensitive names and secret-like values
+> - Fix any missing parentheses or syntax issues
+> - Report detected secrets with their actual values
 
 > ✅ **Expected Output:**
 
@@ -481,7 +484,7 @@ public class User {
     private static final String DESCRIPTION = "This is a regular description.";
 
   // getters/setters...
-  
+
 }
 
 ```
