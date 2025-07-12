@@ -333,10 +333,7 @@ jobs:
         with:
           languages: java
           config-file: .github/codeql/config.yml
-          queries: 
-            security-and-quality
-            security-extended
-            ./.github/codeql/queries/FindHardcodedSecrets.ql
+
       - name: Build with Maven
         run: |
           cd session2/java/UserApp
@@ -391,12 +388,18 @@ touch .github/codeql/queries/FindHardcodedSecrets.ql
 > `config.yml` -> Configures CodeQL analysis settings, paths, and query selection
 ```yaml 
 name: "CodeQL Config"
+
 queries:
   - uses: security-and-quality
+  - uses: security-extended
+  - local: .github/codeql/queries/FindHardcodedSecrets.ql
+
 paths:
   - session2/java
+
 paths-ignore:
   - '**/test/**'
+  - '**/generated/**'
 ```
 
 > `qlpack.yml` -> Defines query pack metadata and dependencies for custom queries

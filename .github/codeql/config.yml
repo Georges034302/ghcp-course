@@ -1,7 +1,13 @@
 name: "CodeQL Config"
+
 queries:
   - uses: security-and-quality
+  - uses: security-extended
+  - local: .github/codeql/queries/FindHardcodedSecrets.ql
+
 paths:
   - session2/java
+
 paths-ignore:
   - '**/test/**'
+  - '**/generated/**'
