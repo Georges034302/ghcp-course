@@ -1,4 +1,3 @@
-
 # 🚀 GHCP Instructor Demo – `UserApp` with GitHub Copilot, CodeQL & GitHub Security
 
 This demo guides instructors through building a secure, layered Spring Boot application (`UserApp`) using GitHub Copilot and GitHub Security tools. It includes model, repository, service, and controller components with security scans and CI/CD integration.
@@ -336,9 +335,7 @@ jobs:
         with:
           languages: java
           config-file: .github/codeql/config.yml
-          queries: |
-            .github/codeql/queries/FindHardcodedSecrets.ql
-            security-extended,security-and-quality
+          queries: .github/codeql/queries/FindHardcodedSecrets.ql
 
       # Build step between init and analyze
       - name: Build with Maven
