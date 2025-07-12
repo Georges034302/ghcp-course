@@ -334,9 +334,9 @@ jobs:
           languages: java
           config-file: .github/codeql/config.yml
           queries: 
-            +.github/codeql/queries/FindHardcodedSecrets.ql
-            +security-extended
-            +security-and-quality
+            security-and-quality
+            security-extended
+            ./.github/codeql/queries/FindHardcodedSecrets.ql
       - name: Build with Maven
         run: |
           cd session2/java/UserApp
