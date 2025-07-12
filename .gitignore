@@ -1,0 +1,4 @@
+# CodeQL
+db/
+.codeql/
+*.sarif
