@@ -411,11 +411,12 @@ dependencies:
 
 ### ✨ Create `FindHardcodedSecrets.ql`
 > **Prompt: Create Custom CodeQL Query – Detect Hardcoded Secrets**  
-> Create FindHardcodedSecrets.ql to detect hardcoded credentials:
-> - Add query metadata with name, description, and severity
-> - Target Java string literals and fields 
-> - Match sensitive field names and values 
-> - Report detected secrets with field context
+> Create a custom CodeQL query in `FindHardcodedSecrets.ql` to:
+> - Detect hardcoded secrets in Java source code
+> - Match field names containing sensitive keywords (`api_key`, `token`, `secret`, `password`)
+> - Find values matching common secret patterns (`sk_*`, `apikey_*`, `token_*`, base64)
+> - Report detected secrets with their actual values
+> - Include standard CodeQL metadata
 
 > ✅ **Expected Output:**
 
@@ -432,30 +433,55 @@ dependencies:
 
 import java
 
-from StringLiteral literal, Field field
+from StringLiteral literal
 where 
-  // Check field name contains sensitive keywords
-  field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
-  // Check if literal initializes this field
-  literal = field.getInitializer().(CompileTimeConstantExpr) and
-  // Check if value matches secret pattern
-  literal.getValue().regexpMatch("(?i).*(sk_.*|[a-zA-Z0-9]{32,})")
-select literal, "Hardcoded secret detected in field '" + field.getName() + "'"
+  exists(Field field |
+    // Match field name patterns
+    field.getName().regexpMatch("(?i).*(api_?key|token|secret|password).*") and
+    // Match field initialization
+    literal = field.getInitializer() and
+    // Match common secret patterns in value
+    literal.getValue().regexpMatch("(?i).*(sk_.*|apikey_.*|token_.*|[a-zA-Z0-9+/=]{32,})")
+  )
+select 
+  literal,
+  "Hardcoded secret detected: '" + literal.getValue()
 ```
 
 ### 📝 Add Test Case for Secret Detection
-
+> **Prompt: \
+> Provide Test cases for the ql script in User.java model
 ```java
 package com.example.UserApp.model;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private String email;
-  private String name;
-  private static final String API_KEY = "sk_test_abc123"; // Example API key
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String email;
+    private String name;
+
+    // ✅ Test case: API key pattern
+    private static final String API_KEY = "sk_test_abc123";
+
+    // ✅ Test case: Token pattern
+    private static final String TOKEN = "token_1234567890abcdef";
+
+    // ✅ Test case: Secret pattern
+    private static final String SECRET = "apikey_secretvalue";
+
+    // ✅ Test case: Password pattern
+    private static final String PASSWORD = "myS3cretP@ssw0rd";
+
+    // ✅ Test case: Base64-like string (32+ chars)
+    private static final String ENCODED = "dGhpcyBpcyBhIHZlcnlMb25nU3RyaW5nQmFzZTY0";
+
+    // ❌ Should NOT match (not a sensitive field name)
+    private static final String DESCRIPTION = "This is a regular description.";
 
   // getters/setters...
+  
 }
 
 ```
