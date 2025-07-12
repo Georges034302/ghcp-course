@@ -298,12 +298,13 @@ jobs:
           echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
           echo "CODEQL_EXTRACTOR_JAVA_ROOT_CAUSE_ANALYSIS=true" >> $GITHUB_ENV
 
-      # Initialize CodeQL with correct paths
+      # Initialize CodeQL with built-in queries first
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: java
-          packs: userapp/secrets@0.0.1
+          config-file: .github/codeql/config.yml
+          queries: security-extended,security-and-quality
 
       # Build step between init and analyze
       - name: Build with Maven
