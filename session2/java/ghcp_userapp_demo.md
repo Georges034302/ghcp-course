@@ -581,6 +581,7 @@ public class User {
     private static final String DESCRIPTION = "This is a regular description.";
 
   // use the bove keys for testing
+  // Code QL will generate a sarif log report
 
 }
 
