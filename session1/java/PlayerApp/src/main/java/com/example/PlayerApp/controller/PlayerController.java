@@ -1,4 +1,4 @@
-package com.example.PlayerApp.controller;
+package com.example.userapp.controller;
 
 import com.example.PlayerApp.model.Player;
 import com.example.PlayerApp.service.PlayerService;
