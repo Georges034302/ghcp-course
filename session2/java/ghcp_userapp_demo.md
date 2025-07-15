@@ -580,7 +580,7 @@ public class User {
     // ❌ Should NOT match (not a sensitive field name)
     private static final String DESCRIPTION = "This is a regular description.";
 
-  // getters/setters...
+  // use the bove keys for testing
 
 }
 
