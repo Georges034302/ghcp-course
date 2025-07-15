@@ -55,3 +55,4 @@ The app will start on [http://localhost:8080](http://localhost:8080).
 - All dependencies are managed via Maven.
 - API key is injected from configuration for demonstration.
 - For production, use a persistent database and secure
+- For Static Testing use code ql
