@@ -23,17 +23,41 @@
 
 ## ✅ Step 1: Scaffold the .NET 8 Project
 
+> *Copilot Prompt:\
+> Provide CLI commands to create a .NET 8 Web API project `UserService` in session2/dotnet directory (exists).\
+> Then create the folders: `Models`, `Services`, `Controllers`, and `wwwroot` inside the project folder.*
+
 ```bash
-dotnet new webapi -n UserApp
-cd UserApp
-code .
+cd session2/dotnet
+dotnet new webapi -n UserService
+cd UserService
+mkdir Models Services Controllers wwwroot
 ```
+**✅ Expected Outcome:**
+
+```
+UserService/
+├── Controllers
+├── Models
+├── Program.cs
+├── Properties
+├── Services
+├── UserService.csproj
+├── UserService.http
+├── appsettings.Development.json
+├── appsettings.json
+├── obj
+└── wwwroot
+```
+
 
 ---
 
 ## ✅ Step 2: Define the Clean Architecture
 
-> *Prompt:* Create `User` model, `UserService` class, and `UserController` with `/api/user?email=` endpoint.
+> *Prompt:* \
+> 
+> Create `User` model class, `UserService` class, and `UserController` with `/api/user?id=` endpoint.
 
 ### 📄 Models/User.cs
 
